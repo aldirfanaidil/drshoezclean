@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    --primary: 173 58% 39%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 215 25% 25%;
+
+    --muted: 210 15% 94%;
+    --muted-foreground: 215 15% 45%;
+
+    --accent: 35 92% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 93% 47%;
+    --warning-foreground: 215 25% 15%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 173 58% 39%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 215 25% 15%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 173 58% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 25% 22%;
+    --sidebar-accent-foreground: 210 20% 95%;
+    --sidebar-border: 215 20% 25%;
+    --sidebar-ring: 173 58% 45%;
+
+    /* Custom design tokens */
+    --gradient-primary: linear-gradient(135deg, hsl(173 58% 39%) 0%, hsl(173 65% 30%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(35 92% 50%) 0%, hsl(25 90% 45%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 20% 99%) 100%);
+    
+    --shadow-sm: 0 1px 2px 0 hsl(215 25% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(215 25% 15% / 0.08), 0 2px 4px -2px hsl(215 25% 15% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(215 25% 15% / 0.08), 0 4px 6px -4px hsl(215 25% 15% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(215 25% 15% / 0.1), 0 8px 10px -6px hsl(215 25% 15% / 0.08);
+    --shadow-glow: 0 0 20px hsl(173 58% 39% / 0.25);
+  }
+
+  .dark {
+    --background: 215 25% 10%;
+    --foreground: 210 20% 95%;
+
+    --card: 215 25% 13%;
+    --card-foreground: 210 20% 95%;
+
+    --popover: 215 25% 13%;
+    --popover-foreground: 210 20% 95%;
+
+    --primary: 173 58% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 20% 18%;
+    --secondary-foreground: 210 20% 90%;
+
+    --muted: 215 20% 18%;
+    --muted-foreground: 215 15% 60%;
+
+    --accent: 35 92% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 145 60% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 90% 50%;
+    --warning-foreground: 215 25% 15%;
+
+    --info: 199 85% 52%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 215 20% 22%;
+    --input: 215 20% 22%;
+    --ring: 173 58% 45%;
+
+    --sidebar-background: 215 30% 8%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 173 58% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 25% 15%;
+    --sidebar-accent-foreground: 210 20% 95%;
+    --sidebar-border: 215 20% 18%;
+    --sidebar-ring: 173 58% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-sm border border-border/50 shadow-md;
+  }
+
+  .kpi-card {
+    @apply bg-card rounded-xl border border-border p-5 transition-all duration-200 cursor-pointer hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/80 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground;
+  }
+
+  .sidebar-item-active {
+    @apply bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary hover:text-sidebar-primary-foreground;
+  }
+
+  .stat-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .stat-badge-success {
+    @apply bg-success/10 text-success;
+  }
+
+  .stat-badge-warning {
+    @apply bg-warning/10 text-warning;
+  }
+
+  .stat-badge-destructive {
+    @apply bg-destructive/10 text-destructive;
+  }
+
+  .stat-badge-info {
+    @apply bg-info/10 text-info;
+  }
+}
+
+/* Print styles for thermal receipt */
+@media print {
+  @page {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-thermal-58 {
+    width: 58mm !important;
+    max-width: 58mm !important;
+    padding: 2mm !important;
+    font-size: 10px !important;
+  }
+
+  .print-thermal-80 {
+    width: 80mm !important;
+    max-width: 80mm !important;
+    padding: 3mm !important;
+    font-size: 11px !important;
+  }
+
+  .print-a4 {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    padding: 10mm !important;
+    font-size: 12px !important;
+  }
+
+  .invoice-container {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* Animation keyframes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(173 58% 39% / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(173 58% 39% / 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Stagger animations for lists */
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
