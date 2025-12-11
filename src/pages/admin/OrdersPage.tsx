@@ -656,7 +656,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
 
       {/* Invoice Dialog */}
       <Dialog open={isInvoiceDialogOpen} onOpenChange={setIsInvoiceDialogOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Invoice</DialogTitle>
           </DialogHeader>

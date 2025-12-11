@@ -95,6 +95,14 @@ export interface StoreSettings {
   qrPayment?: string;
   logo?: string;
   whatsappNotificationEnabled?: boolean;
+  // Invoice customization
+  invoiceTerms?: string;
+  whatsappTemplate?: string;
+  // Sidebar color customization
+  sidebarBgColor?: string;
+  sidebarTextColor?: string;
+  sidebarHoverColor?: string;
+  sidebarActiveColor?: string;
 }
 
 // Helper to map DB columns (snake_case) to app models (camelCase)
@@ -204,7 +212,10 @@ interface AppState {
   currentUser: User | null;
 
   // Actions
+  isLoading: boolean;
+  isInitialized: boolean;
   fetchInitialData: () => Promise<void>;
+  refreshData: () => Promise<void>;
 
   // Auth
   login: (username: string, password: string) => Promise<boolean>;
@@ -244,6 +255,9 @@ interface AppState {
 
   // Settings
   updateSettings: (settings: Partial<StoreSettings>) => Promise<void>;
+
+  // Reset
+  resetAllData: () => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()(persist((set, get) => ({
@@ -255,8 +269,18 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
   branches: [],
   settings: initialSettings,
   currentUser: null,
+  isLoading: false,
+  isInitialized: false,
 
   fetchInitialData: async () => {
+    // Prevent duplicate fetches
+    const state = get();
+    if (state.isLoading || state.isInitialized) {
+      console.log("fetchInitialData: skipping - already loading or initialized");
+      return;
+    }
+
+    set({ isLoading: true });
     try {
       const [
         { data: ordersData, error: ordersError },
@@ -267,10 +291,12 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
         { data: branchesData, error: branchesError },
         { data: settingsData, error: settingsError },
       ] = await Promise.all([
-        supabase.from("orders").select("*"),
-        supabase.from("customers").select("*"),
+        // Limit orders to 50 most recent for fast initial load
+        supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(50),
+        supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(100),
         supabase.from("discounts").select("*"),
-        supabase.from("cash_flows").select("*"),
+        // Limit cash flows to 50 most recent
+        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }).limit(50),
         supabase.from("app_users").select("*"),
         supabase.from("branches").select("*"),
         supabase.from("store_settings").select("*").single(),
@@ -343,6 +369,8 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
         users: (usersData || []).map(mapUserFromDB),
         branches: (branchesData || []).map(mapBranchFromDB),
         settings: finalSettings,
+        isLoading: false,
+        isInitialized: true,
       });
 
     } catch (e) {
@@ -350,7 +378,47 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
       // Ensure settings are set to initial values in case of critical error during other fetches
       set({
         settings: initialSettings,
+        isLoading: false,
+        isInitialized: true,
       });
+    }
+  },
+
+  refreshData: async () => {
+    // Silent refresh - don't show loading state
+    const state = get();
+    if (state.isLoading) {
+      console.log("refreshData: skipping - already loading");
+      return;
+    }
+
+    console.log("refreshData: fetching latest data...");
+    try {
+      const [
+        { data: ordersData },
+        { data: customersData },
+        { data: discountsData },
+        { data: cashFlowsData },
+        { data: branchesData },
+      ] = await Promise.all([
+        supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(50),
+        supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(100),
+        supabase.from("discounts").select("*"),
+        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }).limit(50),
+        supabase.from("branches").select("*"),
+      ]);
+
+      set({
+        orders: (ordersData || []).map(mapOrderFromDB),
+        customers: (customersData || []).map(mapCustomerFromDB),
+        discounts: (discountsData || []).map(mapDiscountFromDB),
+        cashFlows: (cashFlowsData || []).map(mapCashFlowFromDB),
+        branches: (branchesData || []).map(mapBranchFromDB),
+      });
+
+      console.log("refreshData: completed");
+    } catch (e) {
+      console.error("Error in refreshData:", e);
     }
   },
 
@@ -400,7 +468,7 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
   },
 
   logout: () => {
-    set({ currentUser: null });
+    set({ currentUser: null, isInitialized: false });
   },
 
   addOrder: async (orderData) => {
@@ -790,6 +858,46 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
       await supabase.from("store_settings").update(dbUpdates).eq("id", data.id);
     } else {
       await supabase.from("store_settings").insert(dbUpdates);
+    }
+  },
+
+  resetAllData: async () => {
+    console.log("Resetting all data except superusers...");
+
+    try {
+      // Delete all orders
+      await supabase.from("orders").delete().neq("id", "");
+
+      // Delete all customers
+      await supabase.from("customers").delete().neq("id", "");
+
+      // Delete all cash flows
+      await supabase.from("cash_flows").delete().neq("id", "");
+
+      // Delete all discounts
+      await supabase.from("discounts").delete().neq("id", "");
+
+      // Delete all branches
+      await supabase.from("branches").delete().neq("id", "");
+
+      // Delete only non-superuser users
+      await supabase.from("app_users").delete().neq("role", "superuser");
+
+      // Reset local state
+      set({
+        orders: [],
+        customers: [],
+        cashFlows: [],
+        discounts: [],
+        branches: [],
+        users: get().users.filter((u) => u.role === "superuser"),
+        isInitialized: false,
+      });
+
+      console.log("Reset complete!");
+    } catch (error) {
+      console.error("Error resetting data:", error);
+      throw error;
     }
   },
 }), {

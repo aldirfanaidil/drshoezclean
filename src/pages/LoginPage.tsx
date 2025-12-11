@@ -89,7 +89,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl border-0 animate-fade-in">
         <CardHeader className="text-center pb-2">
           <div className="mx-auto mb-4">
-            <img src={settings.logo || defaultLogo} alt="Logo" className="w-20 h-20 object-contain mx-auto" />
+            <img src={settings.logo || defaultLogo} alt="Logo" className="w-20 h-20 object-cover mx-auto rounded-full" />
           </div>
           <CardTitle className="text-2xl font-bold text-foreground">{settings.name}</CardTitle>
           <CardDescription className="text-muted-foreground">

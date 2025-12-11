@@ -62,7 +62,7 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <img src={settings.logo || defaultLogo} alt="Logo" className="w-10 h-10 object-contain" />
+          <img src={settings.logo || defaultLogo} alt="Logo" className="w-10 h-10 object-cover rounded-full" />
           <div>
             <h1 className="font-bold text-lg text-sidebar-foreground">{settings.name}</h1>
             <p className="text-xs text-sidebar-foreground/60">{settings.tagline}</p>
@@ -133,9 +133,15 @@ export function AdminSidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 h-screen w-64 bg-sidebar z-40 transform transition-transform duration-300 lg:translate-x-0",
+          "fixed left-0 top-0 h-screen w-64 z-40 transform transition-transform duration-300 lg:translate-x-0",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
+        style={{
+          backgroundColor: settings.sidebarBgColor || "#1a1a2e",
+          color: settings.sidebarTextColor || "#e2e8f0",
+          "--sidebar-hover": settings.sidebarHoverColor || "#2d2d4a",
+          "--sidebar-active": settings.sidebarActiveColor || "#6366f1",
+        } as React.CSSProperties}
       >
         <SidebarContent />
       </aside>

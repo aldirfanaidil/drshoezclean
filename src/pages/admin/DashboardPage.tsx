@@ -47,21 +47,24 @@ import {
   Pie,
   Cell,
 } from "recharts";
-import { format, subDays, startOfWeek, startOfMonth, startOfYear, isAfter, parseISO, subHours, isToday } from "date-fns";
+import { format, subDays, startOfWeek, startOfMonth, startOfYear, startOfDay, isAfter, parseISO, subHours, isToday } from "date-fns";
 import { id } from "date-fns/locale";
 
 type FilterPeriod = "day" | "week" | "month" | "year";
 
 interface KPICardProps {
   title: string;
-  value: string | number;
+  value: number;
   icon: React.ElementType;
   trend?: string;
   onClick?: () => void;
   colorClass?: string;
+  formatFn?: (value: number) => string;
 }
 
-function KPICard({ title, value, icon: Icon, trend, onClick, colorClass = "text-primary" }: KPICardProps) {
+import { AnimatedCounter } from "@/components/AnimatedCounter";
+
+function KPICard({ title, value, icon: Icon, trend, onClick, colorClass = "text-primary", formatFn }: KPICardProps) {
   return (
     <Card
       className="kpi-card opacity-0 animate-fade-in stagger-item"
@@ -70,7 +73,9 @@ function KPICard({ title, value, icon: Icon, trend, onClick, colorClass = "text-
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground font-medium">{title}</p>
-          <p className="text-2xl font-bold text-foreground">{value}</p>
+          <p className="text-2xl font-bold text-foreground">
+            <AnimatedCounter value={value} formatFn={formatFn} duration={800} />
+          </p>
           {trend && (
             <p className="text-xs text-success flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
@@ -112,7 +117,7 @@ export default function DashboardPage() {
     const now = new Date();
     switch (period) {
       case "day":
-        return subDays(now, 1);
+        return startOfDay(now);
       case "week":
         return startOfWeek(now, { locale: id });
       case "month":
@@ -139,20 +144,20 @@ export default function DashboardPage() {
     const revenue = filteredOrders
       .filter((o) => o.paymentStatus === "paid")
       .reduce((acc, o) => acc + o.total, 0);
-    
+
     const totalOrders = filteredOrders.length;
     const totalShoes = filteredOrders.reduce((acc, o) => acc + o.shoes.length, 0);
     const paidOrders = filteredOrders.filter((o) => o.paymentStatus === "paid").length;
     const unpaidOrders = filteredOrders.filter((o) => o.paymentStatus === "unpaid").length;
-    
+
     const cashTotal = filteredOrders
       .filter((o) => o.paymentStatus === "paid" && o.paymentMethod === "cash")
       .reduce((acc, o) => acc + o.total, 0);
-    
+
     const transferTotal = filteredOrders
       .filter((o) => o.paymentStatus === "paid" && o.paymentMethod === "transfer")
       .reduce((acc, o) => acc + o.total, 0);
-    
+
     const qrisTotal = filteredOrders
       .filter((o) => o.paymentStatus === "paid" && o.paymentMethod === "qris")
       .reduce((acc, o) => acc + o.total, 0);
@@ -163,12 +168,12 @@ export default function DashboardPage() {
       const previousStart = subDays(filterStartDate, period === "day" ? 1 : period === "week" ? 7 : period === "month" ? 30 : 365);
       return isAfter(createdAt, previousStart) && !isAfter(createdAt, filterStartDate);
     });
-    
+
     const previousRevenue = previousPeriodOrders
       .filter((o) => o.paymentStatus === "paid")
       .reduce((acc, o) => acc + o.total, 0);
-    
-    const revenueChange = previousRevenue > 0 
+
+    const revenueChange = previousRevenue > 0
       ? ((revenue - previousRevenue) / previousRevenue * 100).toFixed(1)
       : revenue > 0 ? "100" : "0";
 
@@ -213,10 +218,10 @@ export default function DashboardPage() {
       const hour = subHours(now, i);
       const hourStr = format(hour, "yyyy-MM-dd HH");
       const hourOrders = orders.filter(
-        (o) => o.createdAt.startsWith(hourStr.split(" ")[0]) && 
-               parseISO(o.createdAt).getHours() === hour.getHours() &&
-               isToday(parseISO(o.createdAt)) &&
-               o.paymentStatus === "paid"
+        (o) => o.createdAt.startsWith(hourStr.split(" ")[0]) &&
+          parseISO(o.createdAt).getHours() === hour.getHours() &&
+          isToday(parseISO(o.createdAt)) &&
+          o.paymentStatus === "paid"
       );
       const revenue = hourOrders.reduce((acc, o) => acc + o.total, 0);
       data.push({
@@ -242,7 +247,7 @@ export default function DashboardPage() {
     const branchStats: Record<string, { name: string; orders: number; revenue: number }> = {
       "": { name: "Pusat", orders: 0, revenue: 0 }
     };
-    
+
     branches.forEach(b => {
       branchStats[b.id] = { name: b.name, orders: 0, revenue: 0 };
     });
@@ -327,11 +332,12 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
           title="Total Pendapatan"
-          value={formatCurrency(stats.revenue)}
+          value={stats.revenue}
           icon={DollarSign}
           trend={stats.revenueChange > 0 ? `+${stats.revenueChange}% dari periode lalu` : stats.revenueChange < 0 ? `${stats.revenueChange}% dari periode lalu` : undefined}
           onClick={() => setSelectedKPI("revenue")}
           colorClass="text-primary"
+          formatFn={formatCurrency}
         />
         <KPICard
           title="Total Pesanan"
@@ -363,24 +369,27 @@ export default function DashboardPage() {
         />
         <KPICard
           title="Total Transfer"
-          value={formatCurrency(stats.transferTotal)}
+          value={stats.transferTotal}
           icon={CreditCard}
           onClick={() => setSelectedKPI("transfer")}
           colorClass="text-info"
+          formatFn={formatCurrency}
         />
         <KPICard
           title="Total QRIS"
-          value={formatCurrency(stats.qrisTotal)}
+          value={stats.qrisTotal}
           icon={Smartphone}
           onClick={() => setSelectedKPI("qris")}
           colorClass="text-primary"
+          formatFn={formatCurrency}
         />
         <KPICard
           title="Total Tunai"
-          value={formatCurrency(stats.cashTotal)}
+          value={stats.cashTotal}
           icon={Banknote}
           onClick={() => setSelectedKPI("cash")}
           colorClass="text-success"
+          formatFn={formatCurrency}
         />
       </div>
 
@@ -550,10 +559,10 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="flex-1 bg-muted rounded-full h-2 mr-4">
-                        <div 
+                        <div
                           className="bg-primary h-2 rounded-full transition-all duration-500"
-                          style={{ 
-                            width: `${Math.min((branch.revenue / (stats.revenue || 1)) * 100, 100)}%` 
+                          style={{
+                            width: `${Math.min((branch.revenue / (stats.revenue || 1)) * 100, 100)}%`
                           }}
                         />
                       </div>
@@ -576,12 +585,12 @@ export default function DashboardPage() {
             <DialogTitle>
               Detail {selectedKPI === "revenue" ? "Pendapatan" :
                 selectedKPI === "orders" ? "Pesanan" :
-                selectedKPI === "shoes" ? "Sepatu" :
-                selectedKPI === "paid" ? "Sudah Dibayar" :
-                selectedKPI === "unpaid" ? "Belum Bayar" :
-                selectedKPI === "cash" ? "Tunai" :
-                selectedKPI === "transfer" ? "Transfer" :
-                selectedKPI === "qris" ? "QRIS" : ""}
+                  selectedKPI === "shoes" ? "Sepatu" :
+                    selectedKPI === "paid" ? "Sudah Dibayar" :
+                      selectedKPI === "unpaid" ? "Belum Bayar" :
+                        selectedKPI === "cash" ? "Tunai" :
+                          selectedKPI === "transfer" ? "Transfer" :
+                            selectedKPI === "qris" ? "QRIS" : ""}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-2">

@@ -118,7 +118,7 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
 
   const generateInvoiceText = () => {
     const statusText = order.paymentStatus === "paid" ? "✅ LUNAS" : "⏳ BELUM BAYAR";
-    
+
     let shoesText = "";
     order.shoes.forEach((shoe, index) => {
       const serviceName = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
@@ -171,9 +171,9 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
       const text = generateInvoiceText();
       const encodedText = encodeURIComponent(text);
       const whatsappUrl = `https://wa.me/${phone}?text=${encodedText}`;
-      
+
       window.open(whatsappUrl, "_blank");
-      
+
       toast({
         title: "WhatsApp Dibuka",
         description: "Silakan kirim pesan invoice ke pelanggan",
@@ -340,7 +340,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
             <p className="text-xs font-bold mb-2">Scan untuk Cek Pesanan:</p>
             <div className="flex justify-center">
               <QRCodeSVG
-                value={`${window.location.origin}/tracking?invoice=${order.invoiceNumber}`}
+                value={order.invoiceNumber}
                 size={paperSize === "58mm" ? 60 : paperSize === "80mm" ? 80 : 100}
                 level="M"
                 includeMargin={false}
@@ -374,22 +374,22 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button 
-            onClick={handleSendWhatsApp} 
-            variant="secondary" 
+          <Button
+            onClick={handleSendWhatsApp}
+            variant="secondary"
             className="flex-1 bg-[#25D366] hover:bg-[#20BD5A] text-white"
             disabled={isSending}
           >
             <MessageCircle className="w-4 h-4 mr-2" /> WA
           </Button>
-          <Button 
-            onClick={handleCopyInvoice} 
-            variant="outline" 
+          <Button
+            onClick={handleCopyInvoice}
+            variant="outline"
             className="flex-1"
           >
             <Copy className="w-4 h-4 mr-2" /> Salin
           </Button>
-          <BluetoothPrinterDialog 
+          <BluetoothPrinterDialog
             order={order}
             trigger={
               <Button variant="outline" className="flex-1">

@@ -108,7 +108,7 @@ export default function ClientFormPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
-          <img src={settings.logo || defaultLogo} alt="Logo" className="w-24 h-24 mx-auto mb-4 object-contain" />
+          <img src={settings.logo || defaultLogo} alt="Logo" className="w-24 h-24 mx-auto mb-4 object-cover rounded-full" />
           <h1 className="text-3xl font-bold text-foreground">{settings.name}</h1>
           <p className="text-muted-foreground">{settings.tagline}</p>
           <Button variant="ghost" size="sm" className="mt-2" onClick={() => navigate("/login")}>
@@ -138,7 +138,7 @@ export default function ClientFormPage() {
               <Select value={String(formData.shoeCount)} onValueChange={(v) => handleShoeCountChange(Number(v))}>
                 <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {[1,2,3,4,5,6,7,8,9,10].map((n) => <SelectItem key={n} value={String(n)}>{n} pasang</SelectItem>)}
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => <SelectItem key={n} value={String(n)}>{n} pasang</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>

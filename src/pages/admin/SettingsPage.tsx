@@ -23,7 +23,8 @@ import logo from "@/assets/logo.png";
 
 export default function SettingsPage() {
   const { toast } = useToast();
-  const { settings, updateSettings } = useAppStore();
+  const { settings, updateSettings, resetAllData } = useAppStore();
+  const [isResetting, setIsResetting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const restoreInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,9 +92,23 @@ export default function SettingsPage() {
     toast({ title: "Berhasil", description: "Cache berhasil dibersihkan" });
   };
 
-  const handleResetSettings = () => {
-    localStorage.removeItem("app-storage");
-    window.location.reload();
+  const handleResetSettings = async () => {
+    setIsResetting(true);
+    try {
+      await resetAllData();
+      toast({
+        title: "Berhasil",
+        description: "Semua data berhasil direset. Data superuser tetap aman.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Gagal mereset data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   const handleBackupDatabase = () => {
@@ -475,6 +490,164 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
+      {/* Invoice Terms & Conditions */}
+      <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.36s" }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Store className="w-5 h-5" />
+            Syarat & Ketentuan Invoice
+          </CardTitle>
+          <CardDescription>Atur syarat dan ketentuan yang muncul di invoice</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Syarat & Ketentuan</Label>
+            <textarea
+              className="w-full min-h-[120px] p-3 rounded-md border border-input bg-background text-sm resize-y"
+              placeholder="Segala bentuk kerusakan akibat pencucian sepatu bukan tanggung jawab dari tim dr.shoezclean..."
+              value={settings.invoiceTerms || "Segala bentuk kerusakan akibat pencucian sepatu bukan tanggung jawab dari tim dr.shoezclean.\n\nPerlu diketahui bahwa tidak semua noda/kotoran di sepatu dapat hilang dengan sempurna."}
+              onChange={(e) => {
+                updateSettings({ invoiceTerms: e.target.value });
+              }}
+            />
+          </div>
+          <Button onClick={() => toast({ title: "Berhasil", description: "Syarat & ketentuan berhasil disimpan" })}>
+            <Save className="w-4 h-4 mr-2" /> Simpan Syarat & Ketentuan
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* WhatsApp Message Template */}
+      <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.37s" }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="w-5 h-5" />
+            Template Pesan WhatsApp
+          </CardTitle>
+          <CardDescription>Kustomisasi pesan yang dikirim via WhatsApp</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Template Pesan Invoice</Label>
+            <textarea
+              className="w-full min-h-[150px] p-3 rounded-md border border-input bg-background text-sm resize-y font-mono"
+              placeholder="🧾 *INVOICE {storeName}*..."
+              value={settings.whatsappTemplate || `🧾 *INVOICE {storeName}*
+━━━━━━━━━━━━━━━━━━
+📋 No. Invoice: *{invoiceNumber}*
+📅 Tanggal: {date}
+
+👤 *Pelanggan:*
+{customerName}
+📱 {customerPhone}
+
+👟 *Detail Sepatu:*
+{shoeDetails}
+
+━━━━━━━━━━━━━━━━━━
+💵 *TOTAL: {total}*
+
+📊 Status: {status}
+
+━━━━━━━━━━━━━━━━━━
+Terima kasih telah menggunakan jasa *{storeName}*! 🙏`}
+              onChange={(e) => {
+                updateSettings({ whatsappTemplate: e.target.value });
+              }}
+            />
+            <p className="text-xs text-muted-foreground">
+              Variabel: {"{storeName}"}, {"{invoiceNumber}"}, {"{date}"}, {"{customerName}"}, {"{customerPhone}"}, {"{shoeDetails}"}, {"{total}"}, {"{status}"}
+            </p>
+          </div>
+          <Button onClick={() => toast({ title: "Berhasil", description: "Template WhatsApp berhasil disimpan" })}>
+            <Save className="w-4 h-4 mr-2" /> Simpan Template
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Sidebar Color Customization */}
+      <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.38s" }}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Store className="w-5 h-5" />
+            Kustomisasi Warna Sidebar
+          </CardTitle>
+          <CardDescription>Atur tampilan warna sidebar aplikasi</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Warna Background</Label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  className="w-12 h-10 rounded border cursor-pointer"
+                  value={settings.sidebarBgColor || "#1a1a2e"}
+                  onChange={(e) => updateSettings({ sidebarBgColor: e.target.value })}
+                />
+                <Input
+                  value={settings.sidebarBgColor || "#1a1a2e"}
+                  onChange={(e) => updateSettings({ sidebarBgColor: e.target.value })}
+                  placeholder="#1a1a2e"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Warna Teks</Label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  className="w-12 h-10 rounded border cursor-pointer"
+                  value={settings.sidebarTextColor || "#e2e8f0"}
+                  onChange={(e) => updateSettings({ sidebarTextColor: e.target.value })}
+                />
+                <Input
+                  value={settings.sidebarTextColor || "#e2e8f0"}
+                  onChange={(e) => updateSettings({ sidebarTextColor: e.target.value })}
+                  placeholder="#e2e8f0"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Warna Hover</Label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  className="w-12 h-10 rounded border cursor-pointer"
+                  value={settings.sidebarHoverColor || "#2d2d4a"}
+                  onChange={(e) => updateSettings({ sidebarHoverColor: e.target.value })}
+                />
+                <Input
+                  value={settings.sidebarHoverColor || "#2d2d4a"}
+                  onChange={(e) => updateSettings({ sidebarHoverColor: e.target.value })}
+                  placeholder="#2d2d4a"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Warna Aktif</Label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  className="w-12 h-10 rounded border cursor-pointer"
+                  value={settings.sidebarActiveColor || "#6366f1"}
+                  onChange={(e) => updateSettings({ sidebarActiveColor: e.target.value })}
+                />
+                <Input
+                  value={settings.sidebarActiveColor || "#6366f1"}
+                  onChange={(e) => updateSettings({ sidebarActiveColor: e.target.value })}
+                  placeholder="#6366f1"
+                />
+              </div>
+            </div>
+          </div>
+          <Button onClick={() => toast({ title: "Berhasil", description: "Warna sidebar berhasil disimpan" })}>
+            <Save className="w-4 h-4 mr-2" /> Simpan Warna
+          </Button>
+        </CardContent>
+      </Card>
+
+
       {/* System Actions */}
       <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.4s" }}>
         <CardHeader>
@@ -499,13 +672,13 @@ export default function SettingsPage() {
                 <AlertDialogHeader>
                   <AlertDialogTitle>Reset Semua Data?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Tindakan ini akan menghapus SEMUA data termasuk pesanan, pelanggan, pengguna, dan pengaturan. Data tidak dapat dikembalikan. Pastikan Anda sudah backup data sebelum melanjutkan.
+                    Tindakan ini akan menghapus SEMUA data termasuk pesanan, pelanggan, diskon, cabang, dan arus kas. <strong>Akun superuser TIDAK akan dihapus.</strong> Data tidak dapat dikembalikan. Pastikan Anda sudah backup data sebelum melanjutkan.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Batal</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleResetSettings} className="bg-destructive hover:bg-destructive/90">
-                    Ya, Reset Semua
+                  <AlertDialogAction onClick={handleResetSettings} disabled={isResetting} className="bg-destructive hover:bg-destructive/90">
+                    {isResetting ? "Mereset..." : "Ya, Reset Semua"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
