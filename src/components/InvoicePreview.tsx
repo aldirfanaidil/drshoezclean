@@ -51,23 +51,33 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
           @page { margin: 0; size: ${paperSize === "58mm" ? "58mm auto" : paperSize === "80mm" ? "80mm auto" : "A4"}; }
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Open Sans', 'Roboto', Arial, Helvetica, sans-serif; font-size: ${paperSize === "58mm" ? "9px" : "10px"}; background: #fff; color: #000; font-weight: 400; margin: 0; padding: 2px; }
-          .invoice-container { padding: 2px; }
+          * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          body { 
+            font-family: 'Open Sans', Arial, Helvetica, sans-serif; 
+            font-size: ${paperSize === "58mm" ? "11pt" : "12pt"}; 
+            background: #fff; 
+            color: #000; 
+            font-weight: 500; 
+            margin: 0; 
+            padding: 3px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+          }
+          .invoice-container { padding: 3px; }
           .text-center { text-align: center; }
           .font-bold { font-weight: 700 !important; }
-          .separator { border-bottom: 1px dashed #000 !important; margin: 2px 0; padding-bottom: 2px; }
-          .separator-top { border-top: 1px dashed #000 !important; margin-top: 2px; padding-top: 2px; }
-          .mb-1 { margin-bottom: 1px; }
-          .mb-2 { margin-bottom: 2px; }
-          .py-1 { padding: 2px 0; }
+          .font-medium { font-weight: 600; }
+          .mb-1 { margin-bottom: 2px; }
+          .mb-2 { margin-bottom: 3px; }
+          .py-1 { padding: 3px 0; }
           .flex { display: flex; }
           .justify-between { justify-content: space-between; }
           .justify-center { justify-content: center; }
-          img { max-width: ${paperSize === "58mm" ? "55px" : "65px"}; height: auto; display: block; margin: 0 auto 2px; }
-          .text-muted-foreground { color: #333; }
-          .font-medium { font-weight: 600; }
-          p, span, div { color: #000; line-height: 1.2; }
+          img { max-width: ${paperSize === "58mm" ? "60px" : "70px"}; height: auto; display: block; margin: 0 auto 3px; }
+          .text-muted-foreground { color: #222; font-weight: 500; }
+          p, span, div { color: #000; line-height: 1.4; font-weight: 500; }
+          h2 { font-weight: 700; }
         </style>
       `;
 
@@ -116,26 +126,35 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         @page { margin: 0; padding: 0; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { margin: 0; padding: 2px; font-family: 'Open Sans', 'Roboto', Arial, Helvetica, sans-serif; font-size: ${paperSize === "58mm" ? "9px" : "10px"}; color: #000; font-weight: 400; }
-        .invoice-container { padding: 2px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        body { 
+          margin: 0; 
+          padding: 3px; 
+          font-family: 'Open Sans', Arial, Helvetica, sans-serif; 
+          font-size: ${paperSize === "58mm" ? "11pt" : "12pt"}; 
+          color: #000; 
+          font-weight: 500;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+        }
+        .invoice-container { padding: 3px; }
         .text-center { text-align: center; }
         .font-bold { font-weight: 700 !important; }
-        .separator { border-bottom: 1px dashed #000 !important; margin: 2px 0; padding-bottom: 2px; }
-        .separator-top { border-top: 1px dashed #000 !important; margin-top: 2px; padding-top: 2px; }
-        .mb-1 { margin-bottom: 1px; }
-        .mb-2 { margin-bottom: 2px; }
-        .py-1 { padding: 2px 0; }
+        .font-medium { font-weight: 600; }
+        .mb-1 { margin-bottom: 2px; }
+        .mb-2 { margin-bottom: 3px; }
+        .py-1 { padding: 3px 0; }
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
         .justify-center { justify-content: center; }
         .items-center { align-items: center; }
         .w-full { width: 100%; }
-        img { max-width: ${paperSize === "58mm" ? "55px" : "65px"}; height: auto; display: block; margin: 0 auto 2px; }
-        .text-muted-foreground { color: #333; }
-        .font-medium { font-weight: 600; }
+        img { max-width: ${paperSize === "58mm" ? "60px" : "70px"}; height: auto; display: block; margin: 0 auto 3px; }
+        .text-muted-foreground { color: #222; font-weight: 500; }
         .capitalize { text-transform: capitalize; }
-        p, span, div { color: #000; line-height: 1.2; }
+        p, span, div { color: #000; line-height: 1.4; font-weight: 500; }
+        h2 { font-weight: 700; }
       </style>
     `;
 
@@ -335,54 +354,55 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           ref={invoiceRef}
           className="invoice-container text-foreground bg-card"
           style={{
-            fontFamily: "'Open Sans', 'Roboto', Arial, Helvetica, sans-serif",
-            fontSize: paperSize === "58mm" ? "13px" : paperSize === "80mm" ? "14px" : "15px",
-            padding: paperSize === "58mm" ? "4px" : "8px",
-            lineHeight: 1.35
+            fontFamily: "'Open Sans', Arial, Helvetica, sans-serif",
+            fontSize: paperSize === "58mm" ? "15px" : paperSize === "80mm" ? "16px" : "17px",
+            padding: paperSize === "58mm" ? "5px" : "10px",
+            lineHeight: 1.4,
+            fontWeight: 500
           }}
         >
           {/* Header */}
-          <div className="text-center" style={{ marginBottom: paperSize === "58mm" ? "4px" : "8px" }}>
+          <div className="text-center" style={{ marginBottom: paperSize === "58mm" ? "5px" : "10px" }}>
             <img
               src={settings.logo || defaultLogo}
               alt="Logo"
               className="mx-auto object-contain"
               style={{
-                width: paperSize === "58mm" ? "60px" : "75px",
-                height: paperSize === "58mm" ? "60px" : "75px",
-                marginBottom: "4px"
+                width: paperSize === "58mm" ? "65px" : "80px",
+                height: paperSize === "58mm" ? "65px" : "80px",
+                marginBottom: "5px"
               }}
             />
-            <h2 className="font-bold" style={{ fontSize: paperSize === "58mm" ? "15px" : "17px", marginBottom: "2px" }}>{settings.name}</h2>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px" }}>{settings.tagline}</p>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px" }}>{settings.phone}</p>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px" }}>{settings.address}</p>
+            <h2 className="font-bold" style={{ fontSize: paperSize === "58mm" ? "17px" : "19px", marginBottom: "3px" }}>{settings.name}</h2>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>{settings.tagline}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>{settings.phone}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>{settings.address}</p>
           </div>
 
           {/* Invoice Number - NO border */}
-          <div className="text-center" style={{ padding: "4px 0", margin: "4px 0" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "18px" : "20px", letterSpacing: "1px" }}>INVOICE</p>
-            <p style={{ fontSize: paperSize === "58mm" ? "13px" : "14px" }}>#{order.invoiceNumber}</p>
+          <div className="text-center" style={{ padding: "5px 0", margin: "5px 0" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "20px" : "22px", letterSpacing: "1px" }}>INVOICE</p>
+            <p style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>#{order.invoiceNumber}</p>
           </div>
 
           {/* Customer Info - NO border */}
-          <div style={{ marginBottom: "4px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>Bill To:</p>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>
+          <div style={{ marginBottom: "5px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>Bill To:</p>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>
               <span>Customer:</span>
               <span className="font-medium">{order.customerName}</span>
             </div>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>
               <span>Tgl Masuk:</span>
               <span>{format(new Date(order.entryDate), "dd MMM yy", { locale: id })}</span>
             </div>
             {order.estimatedDate && (
-              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>
                 <span>Estimasi:</span>
                 <span>{format(new Date(order.estimatedDate), "dd MMM yy", { locale: id })}</span>
               </div>
             )}
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>
               <span>Status:</span>
               <span className="font-medium capitalize">
                 {order.paymentStatus === "paid" ? "Lunas" : order.paymentStatus === "unpaid" ? "Belum Bayar" : "Batal"}
@@ -391,15 +411,15 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Separator after Status */}
-          <div style={{ borderBottom: "1px dashed #000", margin: "4px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "5px 0" }}></div>
 
           {/* Items - NO border, separator at end */}
-          <div style={{ marginBottom: "3px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "3px" }}>Detail Item:</p>
+          <div style={{ marginBottom: "4px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "4px" }}>Detail Item:</p>
             {order.shoes.map((shoe) => (
-              <div key={shoe.id} style={{ marginBottom: "3px" }}>
-                <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px" }}>{shoe.brand}</p>
-                <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px" }}>
+              <div key={shoe.id} style={{ marginBottom: "4px" }}>
+                <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>{shoe.brand}</p>
+                <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>
                   <span className="text-muted-foreground">
                     {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service}
                   </span>
@@ -410,16 +430,16 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Separator after Items */}
-          <div style={{ borderBottom: "1px dashed #000", margin: "4px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "5px 0" }}></div>
 
           {/* Totals */}
-          <div style={{ marginBottom: "3px" }}>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>
+          <div style={{ marginBottom: "4px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>
               <span>Sub Total</span>
               <span>{formatCurrency(order.subtotal)}</span>
             </div>
             {order.discount > 0 && (
-              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>
                 <span>Diskon</span>
                 <span>-{formatCurrency(order.discount)}</span>
               </div>
@@ -427,56 +447,56 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Double Separator after Subtotal */}
-          <div style={{ borderBottom: "1px dashed #000", margin: "3px 0" }}></div>
-          <div style={{ borderBottom: "1px dashed #000", margin: "3px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "4px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "4px 0" }}></div>
 
           {/* Total */}
-          <div className="flex justify-between font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "16px", margin: "4px 0" }}>
+          <div className="flex justify-between font-bold" style={{ fontSize: paperSize === "58mm" ? "16px" : "18px", margin: "5px 0" }}>
             <span>TOTAL</span>
             <span>{formatCurrency(order.total)}</span>
           </div>
 
           {/* Payment Status with ----- */}
-          <div className="text-center" style={{ margin: "5px 0" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "16px" }}>
+          <div className="text-center" style={{ margin: "6px 0" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "16px" : "18px" }}>
               {order.paymentStatus === "paid" ? "-----LUNAS-----" : "-----BELUM BAYAR-----"}
             </p>
           </div>
 
           {/* Payment Info - NO border */}
-          <div className="text-center" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px", marginBottom: "4px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "2px" }}>Pembayaran:</p>
+          <div className="text-center" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px", marginBottom: "5px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px", marginBottom: "3px" }}>Pembayaran:</p>
             <p>{settings.bankName} - {settings.bankAccount}</p>
             <p>{settings.accountHolder}</p>
           </div>
 
           {/* QR Code for scanning - NO border */}
-          <div className="text-center" style={{ marginBottom: "4px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px", marginBottom: "4px" }}>Scan Cek Pesanan:</p>
+          <div className="text-center" style={{ marginBottom: "5px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px", marginBottom: "5px" }}>Scan Cek Pesanan:</p>
             <div className="flex justify-center">
               <QRCodeSVG
                 value={order.invoiceNumber}
-                size={paperSize === "58mm" ? 60 : paperSize === "80mm" ? 75 : 90}
+                size={paperSize === "58mm" ? 65 : paperSize === "80mm" ? 80 : 95}
                 level="M"
                 includeMargin={false}
               />
             </div>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginTop: "3px" }}>{order.invoiceNumber}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginTop: "4px" }}>{order.invoiceNumber}</p>
           </div>
 
           {/* Terms - NO border */}
-          <div className="text-center text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "4px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "12px" : "13px", marginBottom: "2px" }}>S&K:</p>
-            <p style={{ marginBottom: "2px" }}>Kerusakan akibat pencucian bukan tanggung jawab kami.</p>
+          <div className="text-center text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px", marginBottom: "5px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px", marginBottom: "3px" }}>S&K:</p>
+            <p style={{ marginBottom: "3px" }}>Kerusakan akibat pencucian bukan tanggung jawab kami.</p>
             <p>Tidak semua noda dapat hilang sempurna.</p>
           </div>
 
           {/* Separator before Footer */}
-          <div style={{ borderBottom: "1px dashed #000", margin: "4px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "5px 0" }}></div>
 
           {/* Footer */}
-          <div className="text-center" style={{ paddingTop: "3px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "13px" : "14px" }}>Terima kasih!</p>
+          <div className="text-center" style={{ paddingTop: "4px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>Terima kasih!</p>
           </div>
         </div>
       </div>
