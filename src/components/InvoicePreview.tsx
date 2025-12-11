@@ -391,7 +391,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Separator after Status */}
-          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+          <div style={{ borderBottom: "1px dashed #000", margin: "3px 0" }}></div>
 
           {/* Items - NO border, separator at end */}
           <div style={{ marginBottom: "2px" }}>
@@ -410,7 +410,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Separator after Items */}
-          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+          <div style={{ borderBottom: "1px dashed #000", margin: "3px 0" }}></div>
 
           {/* Totals */}
           <div style={{ marginBottom: "2px" }}>
@@ -427,8 +427,8 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Double Separator after Subtotal */}
-          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "1px 0" }}>--------------------------------</p>
-          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "1px 0" }}>--------------------------------</p>
+          <div style={{ borderBottom: "1px dashed #000", margin: "2px 0" }}></div>
+          <div style={{ borderBottom: "1px dashed #000", margin: "2px 0" }}></div>
 
           {/* Total */}
           <div className="flex justify-between font-bold" style={{ fontSize: paperSize === "58mm" ? "12px" : "14px", margin: "3px 0" }}>
@@ -472,7 +472,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           </div>
 
           {/* Separator before Footer */}
-          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+          <div style={{ borderBottom: "1px dashed #000", margin: "3px 0" }}></div>
 
           {/* Footer */}
           <div className="text-center" style={{ paddingTop: "2px" }}>
