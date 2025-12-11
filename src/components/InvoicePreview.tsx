@@ -49,31 +49,25 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
 
       const styles = `
         <style>
-          @page { margin: 2mm; size: ${paperSize === "58mm" ? "58mm auto" : paperSize === "80mm" ? "80mm auto" : "A4"}; }
+          @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+          @page { margin: 0; size: ${paperSize === "58mm" ? "58mm auto" : paperSize === "80mm" ? "80mm auto" : "A4"}; }
           * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: 'Courier New', monospace; font-size: ${paperSize === "58mm" ? "10px" : "11px"}; background: #fff; }
-          .invoice-container { padding: 3mm; }
+          body { font-family: 'Open Sans', 'Roboto', Arial, Helvetica, sans-serif; font-size: ${paperSize === "58mm" ? "9px" : "10px"}; background: #fff; color: #000; font-weight: 400; margin: 0; padding: 2px; }
+          .invoice-container { padding: 2px; }
           .text-center { text-align: center; }
-          .font-bold { font-weight: bold; }
-          .text-xs { font-size: 10px; }
-          .text-sm { font-size: 11px; }
-          .text-lg { font-size: 14px; }
-          .mb-1 { margin-bottom: 4px; }
-          .mb-2 { margin-bottom: 8px; }
-          .mb-4 { margin-bottom: 16px; }
-          .border-dashed { border-style: dashed; border-color: #000; }
-          .border-t { border-top: 1px dashed #000; }
-          .border-b { border-bottom: 1px dashed #000; }
-          .py-2 { padding: 8px 0; }
-          .pt-2 { padding-top: 8px; }
-          .pt-4 { padding-top: 16px; }
-          .my-4 { margin: 16px 0; }
+          .font-bold { font-weight: 700 !important; }
+          .separator { border-bottom: 1px dashed #000 !important; margin: 2px 0; padding-bottom: 2px; }
+          .separator-top { border-top: 1px dashed #000 !important; margin-top: 2px; padding-top: 2px; }
+          .mb-1 { margin-bottom: 1px; }
+          .mb-2 { margin-bottom: 2px; }
+          .py-1 { padding: 2px 0; }
           .flex { display: flex; }
           .justify-between { justify-content: space-between; }
           .justify-center { justify-content: center; }
-          img { max-width: 60px; height: auto; display: block; margin: 0 auto 8px; }
-          .text-muted-foreground { color: #666; }
-          .font-medium { font-weight: 500; }
+          img { max-width: ${paperSize === "58mm" ? "55px" : "65px"}; height: auto; display: block; margin: 0 auto 2px; }
+          .text-muted-foreground { color: #333; }
+          .font-medium { font-weight: 600; }
+          p, span, div { color: #000; line-height: 1.2; }
         </style>
       `;
 
@@ -120,36 +114,28 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
 
     const styles = `
       <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
         @page { margin: 0; padding: 0; }
-        body { margin: 0; padding: 0; font-family: 'Courier New', monospace; }
-        .invoice { background: white; padding: ${paperSize === "58mm" ? "2mm" : paperSize === "80mm" ? "3mm" : "10mm"}; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { margin: 0; padding: 2px; font-family: 'Open Sans', 'Roboto', Arial, Helvetica, sans-serif; font-size: ${paperSize === "58mm" ? "9px" : "10px"}; color: #000; font-weight: 400; }
+        .invoice-container { padding: 2px; }
         .text-center { text-align: center; }
-        .font-bold { font-weight: bold; }
-        .text-xs { font-size: 10px; }
-        .text-sm { font-size: 11px; }
-        .text-base { font-size: 12px; }
-        .text-lg { font-size: 14px; }
-        .mb-1 { margin-bottom: 4px; }
-        .mb-2 { margin-bottom: 8px; }
-        .mb-4 { margin-bottom: 16px; }
-        .border-dashed { border-style: dashed; }
-        .border-t { border-top: 1px solid #000; }
-        .border-b { border-bottom: 1px solid #000; }
-        .py-2 { padding-top: 8px; padding-bottom: 8px; }
-        .pt-2 { padding-top: 8px; }
-        .pt-4 { padding-top: 16px; }
-        .my-4 { margin-top: 16px; margin-bottom: 16px; }
+        .font-bold { font-weight: 700 !important; }
+        .separator { border-bottom: 1px dashed #000 !important; margin: 2px 0; padding-bottom: 2px; }
+        .separator-top { border-top: 1px dashed #000 !important; margin-top: 2px; padding-top: 2px; }
+        .mb-1 { margin-bottom: 1px; }
+        .mb-2 { margin-bottom: 2px; }
+        .py-1 { padding: 2px 0; }
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
         .justify-center { justify-content: center; }
         .items-center { align-items: center; }
         .w-full { width: 100%; }
-        .gap-2 { gap: 8px; }
-        img { max-width: 60px; height: auto; }
-        .text-muted-foreground { color: #666; }
-        .font-medium { font-weight: 500; }
+        img { max-width: ${paperSize === "58mm" ? "55px" : "65px"}; height: auto; display: block; margin: 0 auto 2px; }
+        .text-muted-foreground { color: #333; }
+        .font-medium { font-weight: 600; }
         .capitalize { text-transform: capitalize; }
-        * { box-sizing: border-box; }
+        p, span, div { color: #000; line-height: 1.2; }
       </style>
     `;
 
@@ -347,54 +333,75 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
       <div className={`${getContainerWidth()} mx-auto bg-card border rounded-lg overflow-hidden`}>
         <div
           ref={invoiceRef}
-          className="invoice-container p-4 font-mono text-foreground bg-card"
-          style={{ fontSize: paperSize === "58mm" ? "10px" : paperSize === "80mm" ? "11px" : "12px" }}
+          className="invoice-container text-foreground bg-card"
+          style={{
+            fontFamily: "'Open Sans', 'Roboto', Arial, Helvetica, sans-serif",
+            fontSize: paperSize === "58mm" ? "9px" : paperSize === "80mm" ? "10px" : "11px",
+            padding: paperSize === "58mm" ? "2px" : "4px",
+            lineHeight: 1.2
+          }}
         >
           {/* Header */}
-          <div className="text-center mb-4">
-            <img src={settings.logo || defaultLogo} alt="Logo" className="w-16 h-16 mx-auto mb-2 object-contain" />
-            <h2 className="font-bold text-lg">{settings.name}</h2>
-            <p className="text-xs text-muted-foreground">{settings.tagline}</p>
-            <p className="text-xs text-muted-foreground">{settings.phone}</p>
-            <p className="text-xs text-muted-foreground">{settings.address}</p>
+          <div className="text-center" style={{ marginBottom: paperSize === "58mm" ? "2px" : "4px" }}>
+            <img
+              src={settings.logo || defaultLogo}
+              alt="Logo"
+              className="mx-auto object-contain"
+              style={{
+                width: paperSize === "58mm" ? "55px" : "65px",
+                height: paperSize === "58mm" ? "55px" : "65px",
+                marginBottom: "2px"
+              }}
+            />
+            <h2 className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "13px", marginBottom: "1px" }}>{settings.name}</h2>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.tagline}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.phone}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.address}</p>
           </div>
 
-          {/* Invoice Number */}
-          <div className="text-center border-t border-b border-dashed py-2 mb-4">
-            <p className="font-bold">INVOICE</p>
-            <p className="text-xs">#{order.invoiceNumber}</p>
+          {/* Invoice Number - with visible dashed border */}
+          <div className="text-center" style={{
+            borderTop: "1px dashed #000",
+            borderBottom: "1px dashed #000",
+            padding: "3px 0",
+            margin: "2px 0"
+          }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "16px", letterSpacing: "1px" }}>INVOICE</p>
+            <p style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>#{order.invoiceNumber}</p>
           </div>
 
           {/* Customer Info */}
-          <div className="mb-4">
-            <div className="flex justify-between text-xs mb-1">
+          <div style={{ marginBottom: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Bill To:</p>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
               <span>Customer:</span>
               <span className="font-medium">{order.customerName}</span>
             </div>
-            <div className="flex justify-between text-xs mb-1">
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
               <span>Tgl Masuk:</span>
               <span>{format(new Date(order.entryDate), "dd MMM yy", { locale: id })}</span>
             </div>
             {order.estimatedDate && (
-              <div className="flex justify-between text-xs mb-1">
-                <span>Tgl Estimasi:</span>
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+                <span>Estimasi:</span>
                 <span>{format(new Date(order.estimatedDate), "dd MMM yy", { locale: id })}</span>
               </div>
             )}
-            <div className="flex justify-between text-xs">
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>
               <span>Status:</span>
               <span className="font-medium capitalize">
-                {order.paymentStatus === "paid" ? "Lunas" : order.paymentStatus === "unpaid" ? "Belum Bayar" : "Dibatalkan"}
+                {order.paymentStatus === "paid" ? "Lunas" : order.paymentStatus === "unpaid" ? "Belum Bayar" : "Batal"}
               </span>
             </div>
           </div>
 
-          {/* Items */}
-          <div className="border-t border-dashed py-2 mb-2">
-            {order.shoes.map((shoe, index) => (
-              <div key={shoe.id} className="mb-2">
-                <p className="font-medium text-xs">{shoe.brand}</p>
-                <div className="flex justify-between text-xs">
+          {/* Items - with visible dashed border */}
+          <div style={{ borderTop: "1px dashed #000", paddingTop: "2px", marginBottom: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Detail Item:</p>
+            {order.shoes.map((shoe) => (
+              <div key={shoe.id} style={{ marginBottom: "1px" }}>
+                <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>{shoe.brand}</p>
+                <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>
                   <span className="text-muted-foreground">
                     {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service}
                   </span>
@@ -404,62 +411,77 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
             ))}
           </div>
 
-          {/* Totals */}
-          <div className="border-t border-dashed py-2">
-            <div className="flex justify-between text-xs mb-1">
+          {/* Totals - with visible dashed border */}
+          <div style={{ borderTop: "1px dashed #000", paddingTop: "2px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
               <span>Sub Total</span>
               <span>{formatCurrency(order.subtotal)}</span>
             </div>
             {order.discount > 0 && (
-              <div className="flex justify-between text-xs mb-1">
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
                 <span>Diskon</span>
                 <span>-{formatCurrency(order.discount)}</span>
               </div>
             )}
-            <div className="flex justify-between font-bold border-t border-dashed pt-2 mt-2">
+            <div className="flex justify-between font-bold" style={{
+              borderTop: "1px dashed #000",
+              paddingTop: "2px",
+              marginTop: "2px",
+              fontSize: paperSize === "58mm" ? "10px" : "12px"
+            }}>
               <span>TOTAL</span>
               <span>{formatCurrency(order.total)}</span>
             </div>
           </div>
 
-          {/* Payment Status */}
-          <div className="text-center border-t border-b border-dashed py-2 my-4">
-            <p className="font-bold">
-              {order.paymentStatus === "paid" ? "LUNAS" : "---BELUM BAYAR---"}
+          {/* Payment Status - with visible dashed border */}
+          <div className="text-center" style={{
+            borderTop: "1px dashed #000",
+            borderBottom: "1px dashed #000",
+            padding: "2px 0",
+            margin: "2px 0"
+          }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "10px" : "12px" }}>
+              {order.paymentStatus === "paid" ? "✓ LUNAS" : "BELUM BAYAR"}
             </p>
           </div>
 
           {/* Payment Info */}
-          <div className="text-center text-xs mb-4">
-            <p className="font-bold mb-1">Pembayaran:</p>
+          <div className="text-center" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Pembayaran:</p>
             <p>{settings.bankName} - {settings.bankAccount}</p>
             <p>{settings.accountHolder}</p>
           </div>
 
-          {/* QR Code for scanning */}
-          <div className="text-center mb-4 border-t border-dashed pt-4">
-            <p className="text-xs font-bold mb-2">Scan untuk Cek Pesanan:</p>
+          {/* QR Code for scanning - with visible dashed border */}
+          <div className="text-center" style={{ borderTop: "1px dashed #000", paddingTop: "2px", marginBottom: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "2px" }}>Scan Cek Pesanan:</p>
             <div className="flex justify-center">
               <QRCodeSVG
                 value={order.invoiceNumber}
-                size={paperSize === "58mm" ? 60 : paperSize === "80mm" ? 80 : 100}
+                size={paperSize === "58mm" ? 50 : paperSize === "80mm" ? 65 : 80}
                 level="M"
                 includeMargin={false}
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">{order.invoiceNumber}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "7px" : "8px", marginTop: "1px" }}>{order.invoiceNumber}</p>
           </div>
 
-          {/* Terms */}
-          <div className="text-center text-xs text-muted-foreground mb-4 border-t border-dashed pt-2">
-            <p className="font-bold mb-1">Syarat & Ketentuan:</p>
-            <p className="mb-1">Segala bentuk kerusakan akibat pencucian sepatu bukan tanggung jawab dari tim dr.shoezclean.</p>
-            <p>Perlu diketahui bahwa tidak semua noda/kotoran di sepatu dapat hilang dengan sempurna.</p>
+          {/* Terms - with visible dashed border */}
+          <div className="text-center text-muted-foreground" style={{
+            borderTop: "1px dashed #000",
+            paddingTop: "2px",
+            fontSize: paperSize === "58mm" ? "7px" : "8px",
+            marginBottom: "2px"
+          }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "1px" }}>S&K:</p>
+            <p style={{ marginBottom: "1px" }}>Kerusakan akibat pencucian bukan tanggung jawab kami.</p>
+            <p>Tidak semua noda dapat hilang sempurna.</p>
           </div>
 
-          {/* Footer */}
-          <div className="text-center border-t border-dashed pt-2">
-            <p className="font-bold text-sm">Terimakasih telah menggunakan jasa kami!</p>
+          {/* Footer - with visible dashed border */}
+          <div className="text-center" style={{ borderTop: "1px dashed #000", paddingTop: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>Terima kasih!</p>
           </div>
         </div>
       </div>
