@@ -336,58 +336,53 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           className="invoice-container text-foreground bg-card"
           style={{
             fontFamily: "'Open Sans', 'Roboto', Arial, Helvetica, sans-serif",
-            fontSize: paperSize === "58mm" ? "9px" : paperSize === "80mm" ? "10px" : "11px",
-            padding: paperSize === "58mm" ? "2px" : "4px",
-            lineHeight: 1.2
+            fontSize: paperSize === "58mm" ? "11px" : paperSize === "80mm" ? "12px" : "13px",
+            padding: paperSize === "58mm" ? "3px" : "6px",
+            lineHeight: 1.3
           }}
         >
           {/* Header */}
-          <div className="text-center" style={{ marginBottom: paperSize === "58mm" ? "2px" : "4px" }}>
+          <div className="text-center" style={{ marginBottom: paperSize === "58mm" ? "3px" : "6px" }}>
             <img
               src={settings.logo || defaultLogo}
               alt="Logo"
               className="mx-auto object-contain"
               style={{
-                width: paperSize === "58mm" ? "55px" : "65px",
-                height: paperSize === "58mm" ? "55px" : "65px",
-                marginBottom: "2px"
+                width: paperSize === "58mm" ? "55px" : "70px",
+                height: paperSize === "58mm" ? "55px" : "70px",
+                marginBottom: "3px"
               }}
             />
-            <h2 className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "13px", marginBottom: "1px" }}>{settings.name}</h2>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.tagline}</p>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.phone}</p>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>{settings.address}</p>
+            <h2 className="font-bold" style={{ fontSize: paperSize === "58mm" ? "13px" : "15px", marginBottom: "2px" }}>{settings.name}</h2>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px" }}>{settings.tagline}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px" }}>{settings.phone}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px" }}>{settings.address}</p>
           </div>
 
-          {/* Invoice Number - with visible dashed border */}
-          <div className="text-center" style={{
-            borderTop: "1px dashed #000",
-            borderBottom: "1px dashed #000",
-            padding: "3px 0",
-            margin: "2px 0"
-          }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "14px" : "16px", letterSpacing: "1px" }}>INVOICE</p>
-            <p style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>#{order.invoiceNumber}</p>
+          {/* Invoice Number - NO border */}
+          <div className="text-center" style={{ padding: "3px 0", margin: "3px 0" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "16px" : "18px", letterSpacing: "1px" }}>INVOICE</p>
+            <p style={{ fontSize: paperSize === "58mm" ? "11px" : "12px" }}>#{order.invoiceNumber}</p>
           </div>
 
-          {/* Customer Info */}
-          <div style={{ marginBottom: "2px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Bill To:</p>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+          {/* Customer Info - NO border */}
+          <div style={{ marginBottom: "3px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "2px" }}>Bill To:</p>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>
               <span>Customer:</span>
               <span className="font-medium">{order.customerName}</span>
             </div>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>
               <span>Tgl Masuk:</span>
               <span>{format(new Date(order.entryDate), "dd MMM yy", { locale: id })}</span>
             </div>
             {order.estimatedDate && (
-              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>
                 <span>Estimasi:</span>
                 <span>{format(new Date(order.estimatedDate), "dd MMM yy", { locale: id })}</span>
               </div>
             )}
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px" }}>
               <span>Status:</span>
               <span className="font-medium capitalize">
                 {order.paymentStatus === "paid" ? "Lunas" : order.paymentStatus === "unpaid" ? "Belum Bayar" : "Batal"}
@@ -395,13 +390,16 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
             </div>
           </div>
 
-          {/* Items - with visible dashed border */}
-          <div style={{ borderTop: "1px dashed #000", paddingTop: "2px", marginBottom: "2px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Detail Item:</p>
+          {/* Separator after Status */}
+          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+
+          {/* Items - NO border, separator at end */}
+          <div style={{ marginBottom: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "2px" }}>Detail Item:</p>
             {order.shoes.map((shoe) => (
-              <div key={shoe.id} style={{ marginBottom: "1px" }}>
-                <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>{shoe.brand}</p>
-                <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px" }}>
+              <div key={shoe.id} style={{ marginBottom: "2px" }}>
+                <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px" }}>{shoe.brand}</p>
+                <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px" }}>
                   <span className="text-muted-foreground">
                     {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service}
                   </span>
@@ -411,77 +409,74 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
             ))}
           </div>
 
-          {/* Totals - with visible dashed border */}
-          <div style={{ borderTop: "1px dashed #000", paddingTop: "2px" }}>
-            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+          {/* Separator after Items */}
+          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+
+          {/* Totals */}
+          <div style={{ marginBottom: "2px" }}>
+            <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>
               <span>Sub Total</span>
               <span>{formatCurrency(order.subtotal)}</span>
             </div>
             {order.discount > 0 && (
-              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>
+              <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>
                 <span>Diskon</span>
                 <span>-{formatCurrency(order.discount)}</span>
               </div>
             )}
-            <div className="flex justify-between font-bold" style={{
-              borderTop: "1px dashed #000",
-              paddingTop: "2px",
-              marginTop: "2px",
-              fontSize: paperSize === "58mm" ? "10px" : "12px"
-            }}>
-              <span>TOTAL</span>
-              <span>{formatCurrency(order.total)}</span>
-            </div>
           </div>
 
-          {/* Payment Status - with visible dashed border */}
-          <div className="text-center" style={{
-            borderTop: "1px dashed #000",
-            borderBottom: "1px dashed #000",
-            padding: "2px 0",
-            margin: "2px 0"
-          }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "10px" : "12px" }}>
-              {order.paymentStatus === "paid" ? "✓ LUNAS" : "BELUM BAYAR"}
+          {/* Double Separator after Subtotal */}
+          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "1px 0" }}>--------------------------------</p>
+          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "1px 0" }}>--------------------------------</p>
+
+          {/* Total */}
+          <div className="flex justify-between font-bold" style={{ fontSize: paperSize === "58mm" ? "12px" : "14px", margin: "3px 0" }}>
+            <span>TOTAL</span>
+            <span>{formatCurrency(order.total)}</span>
+          </div>
+
+          {/* Payment Status with ----- */}
+          <div className="text-center" style={{ margin: "4px 0" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "12px" : "14px" }}>
+              {order.paymentStatus === "paid" ? "-----LUNAS-----" : "-----BELUM BAYAR-----"}
             </p>
           </div>
 
-          {/* Payment Info */}
-          <div className="text-center" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "2px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "1px" }}>Pembayaran:</p>
+          {/* Payment Info - NO border */}
+          <div className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", marginBottom: "3px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px", marginBottom: "1px" }}>Pembayaran:</p>
             <p>{settings.bankName} - {settings.bankAccount}</p>
             <p>{settings.accountHolder}</p>
           </div>
 
-          {/* QR Code for scanning - with visible dashed border */}
-          <div className="text-center" style={{ borderTop: "1px dashed #000", paddingTop: "2px", marginBottom: "2px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "2px" }}>Scan Cek Pesanan:</p>
+          {/* QR Code for scanning - NO border */}
+          <div className="text-center" style={{ marginBottom: "3px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", marginBottom: "3px" }}>Scan Cek Pesanan:</p>
             <div className="flex justify-center">
               <QRCodeSVG
                 value={order.invoiceNumber}
-                size={paperSize === "58mm" ? 50 : paperSize === "80mm" ? 65 : 80}
+                size={paperSize === "58mm" ? 55 : paperSize === "80mm" ? 70 : 85}
                 level="M"
                 includeMargin={false}
               />
             </div>
-            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "7px" : "8px", marginTop: "1px" }}>{order.invoiceNumber}</p>
+            <p className="text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginTop: "2px" }}>{order.invoiceNumber}</p>
           </div>
 
-          {/* Terms - with visible dashed border */}
-          <div className="text-center text-muted-foreground" style={{
-            borderTop: "1px dashed #000",
-            paddingTop: "2px",
-            fontSize: paperSize === "58mm" ? "7px" : "8px",
-            marginBottom: "2px"
-          }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "8px" : "9px", marginBottom: "1px" }}>S&K:</p>
+          {/* Terms - NO border */}
+          <div className="text-center text-muted-foreground" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px", marginBottom: "3px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", marginBottom: "1px" }}>S&K:</p>
             <p style={{ marginBottom: "1px" }}>Kerusakan akibat pencucian bukan tanggung jawab kami.</p>
             <p>Tidak semua noda dapat hilang sempurna.</p>
           </div>
 
-          {/* Footer - with visible dashed border */}
-          <div className="text-center" style={{ borderTop: "1px dashed #000", paddingTop: "2px" }}>
-            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "9px" : "10px" }}>Terima kasih!</p>
+          {/* Separator before Footer */}
+          <p className="text-center" style={{ fontSize: paperSize === "58mm" ? "10px" : "11px", margin: "2px 0" }}>--------------------------------</p>
+
+          {/* Footer */}
+          <div className="text-center" style={{ paddingTop: "2px" }}>
+            <p className="font-bold" style={{ fontSize: paperSize === "58mm" ? "11px" : "12px" }}>Terima kasih!</p>
           </div>
         </div>
       </div>
