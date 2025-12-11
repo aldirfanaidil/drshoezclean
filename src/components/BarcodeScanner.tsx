@@ -61,7 +61,7 @@ export function BarcodeScanner({ onScan }: BarcodeScannerProps) {
               </Button>
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             {error ? (
               <div className="p-4 bg-destructive/10 text-destructive rounded-lg text-center">
@@ -100,13 +100,42 @@ export function BarcodeScanner({ onScan }: BarcodeScannerProps) {
                     },
                   }}
                 />
+                {/* Scanner Overlay with Laser Animation */}
                 <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute inset-8 border-2 border-primary rounded-lg" />
-                  <div className="absolute top-1/2 left-8 right-8 h-0.5 bg-primary animate-pulse" />
+                  {/* Corner brackets */}
+                  <div className="absolute top-6 left-6 w-8 h-8 border-l-4 border-t-4 border-primary rounded-tl-lg" />
+                  <div className="absolute top-6 right-6 w-8 h-8 border-r-4 border-t-4 border-primary rounded-tr-lg" />
+                  <div className="absolute bottom-6 left-6 w-8 h-8 border-l-4 border-b-4 border-primary rounded-bl-lg" />
+                  <div className="absolute bottom-6 right-6 w-8 h-8 border-r-4 border-b-4 border-primary rounded-br-lg" />
+
+                  {/* Laser beam animation */}
+                  <div
+                    className="absolute left-6 right-6 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent shadow-[0_0_15px_3px_rgba(239,68,68,0.7)]"
+                    style={{
+                      animation: "scanLine 2s ease-in-out infinite",
+                    }}
+                  />
+
+                  {/* Scanning effect overlay */}
+                  <div className="absolute inset-6 border border-primary/30 rounded-lg" />
                 </div>
+
+                {/* CSS Animation Keyframes */}
+                <style>{`
+                  @keyframes scanLine {
+                    0%, 100% {
+                      top: 24px;
+                      opacity: 0.8;
+                    }
+                    50% {
+                      top: calc(100% - 28px);
+                      opacity: 1;
+                    }
+                  }
+                `}</style>
               </div>
             )}
-            
+
             <p className="text-sm text-muted-foreground text-center">
               Arahkan kamera ke barcode atau QR code invoice pesanan
             </p>

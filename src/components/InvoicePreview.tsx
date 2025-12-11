@@ -28,12 +28,40 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
   const [isSending, setIsSending] = useState(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     const printContent = invoiceRef.current;
     if (!printContent) return;
 
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
+    // Check if on mobile/Android
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // On mobile, download PDF instead since print dialogs are unreliable
+      toast({
+        title: "Mencetak...",
+        description: "Mengunduh PDF untuk dicetak",
+      });
+      await handleDownloadPDF();
+      return;
+    }
+
+    // Desktop: Use iframe for printing (more reliable than window.open)
+    const printFrame = document.createElement("iframe");
+    printFrame.style.position = "absolute";
+    printFrame.style.top = "-10000px";
+    printFrame.style.left = "-10000px";
+    document.body.appendChild(printFrame);
+
+    const frameDoc = printFrame.contentDocument || printFrame.contentWindow?.document;
+    if (!frameDoc) {
+      document.body.removeChild(printFrame);
+      toast({
+        title: "Error",
+        description: "Tidak dapat mencetak. Gunakan tombol PDF.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const styles = `
       <style>
@@ -45,23 +73,33 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
         .text-xs { font-size: 10px; }
         .text-sm { font-size: 11px; }
         .text-base { font-size: 12px; }
+        .text-lg { font-size: 14px; }
         .mb-1 { margin-bottom: 4px; }
         .mb-2 { margin-bottom: 8px; }
         .mb-4 { margin-bottom: 16px; }
         .border-dashed { border-style: dashed; }
-        .border-t { border-top-width: 1px; }
-        .border-b { border-bottom-width: 1px; }
+        .border-t { border-top: 1px solid #000; }
+        .border-b { border-bottom: 1px solid #000; }
         .py-2 { padding-top: 8px; padding-bottom: 8px; }
+        .pt-2 { padding-top: 8px; }
+        .pt-4 { padding-top: 16px; }
+        .my-4 { margin-top: 16px; margin-bottom: 16px; }
         .flex { display: flex; }
         .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
         .items-center { align-items: center; }
         .w-full { width: 100%; }
         .gap-2 { gap: 8px; }
         img { max-width: 60px; height: auto; }
+        .text-muted-foreground { color: #666; }
+        .font-medium { font-weight: 500; }
+        .capitalize { text-transform: capitalize; }
+        * { box-sizing: border-box; }
       </style>
     `;
 
-    printWindow.document.write(`
+    frameDoc.open();
+    frameDoc.write(`
       <!DOCTYPE html>
       <html>
         <head>
@@ -73,13 +111,21 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
         </body>
       </html>
     `);
+    frameDoc.close();
 
-    printWindow.document.close();
-    printWindow.focus();
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+    // Wait for content to load then print
+    printFrame.onload = () => {
+      try {
+        printFrame.contentWindow?.focus();
+        printFrame.contentWindow?.print();
+      } catch (e) {
+        console.error("Print error:", e);
+      }
+      // Remove iframe after printing
+      setTimeout(() => {
+        document.body.removeChild(printFrame);
+      }, 1000);
+    };
   };
 
   const handleDownloadPDF = async () => {
