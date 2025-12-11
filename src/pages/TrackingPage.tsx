@@ -1,23 +1,26 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useAppStore } from "@/lib/store";
+import { useAppStore, type Order } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 import { formatCurrency, SERVICES, SHOE_PROCESSES } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Search, Package, Clock, CheckCircle, Home, Phone, User } from "lucide-react";
+import { Search, Package, Clock, CheckCircle, Home, Phone, User, ScanLine, Loader2 } from "lucide-react";
+import { BarcodeScanner } from "@/components/BarcodeScanner";
 import defaultLogo from "@/assets/logo.png";
 
 export default function TrackingPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { orders, settings } = useAppStore();
-  
+  const { settings } = useAppStore();
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [foundOrder, setFoundOrder] = useState<typeof orders[0] | null>(null);
+  const [foundOrder, setFoundOrder] = useState<Order | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Auto-search from QR code
   useEffect(() => {
@@ -28,29 +31,69 @@ export default function TrackingPage() {
     }
   }, [searchParams]);
 
-  const handleSearch = (query?: string) => {
+  const handleSearch = async (query?: string) => {
     const searchTerm = (query || searchQuery).trim().toUpperCase();
     if (!searchTerm) return;
 
-    const order = orders.find(
-      (o) => o.invoiceNumber.toUpperCase() === searchTerm || 
-             o.invoiceNumber.toUpperCase().includes(searchTerm)
-    );
+    setIsLoading(true);
+    setNotFound(false);
+    setFoundOrder(null);
 
-    if (order) {
-      setFoundOrder(order);
-      setNotFound(false);
-    } else {
-      setFoundOrder(null);
+    try {
+      // Query Supabase directly for public tracking
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*")
+        .ilike("invoice_number", `%${searchTerm}%`)
+        .limit(1)
+        .single();
+
+      if (error || !data) {
+        setFoundOrder(null);
+        setNotFound(true);
+      } else {
+        // Map DB columns to app model
+        const order: Order = {
+          id: data.id,
+          invoiceNumber: data.invoice_number,
+          customerId: data.customer_id,
+          customerName: data.customer_name,
+          customerPhone: data.customer_phone,
+          shoes: data.shoes || [],
+          entryDate: data.entry_date,
+          estimatedDate: data.estimated_date,
+          pickupDate: data.pickup_date,
+          notes: data.notes,
+          paymentStatus: data.payment_status,
+          paymentMethod: data.payment_method,
+          subtotal: data.subtotal,
+          discount: data.discount,
+          total: data.total,
+          branchId: data.branch_id,
+          createdAt: data.created_at,
+          updatedAt: data.updated_at,
+        };
+        setFoundOrder(order);
+        setNotFound(false);
+      }
+    } catch (e) {
+      console.error("Error searching order:", e);
       setNotFound(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getOverallStatus = (order: typeof orders[0]) => {
+  const handleScan = (result: string) => {
+    setSearchQuery(result);
+    handleSearch(result);
+  };
+
+  const getOverallStatus = (order: Order) => {
     // Get the lowest status among all shoes
     const statusOrder = SHOE_PROCESSES.map(s => s.value);
     let lowestIndex = statusOrder.length - 1;
-    
+
     order.shoes.forEach(shoe => {
       const status = shoe.processStatus || "received";
       const index = statusOrder.findIndex(s => s === status);
@@ -58,7 +101,7 @@ export default function TrackingPage() {
         lowestIndex = index;
       }
     });
-    
+
     return statusOrder[lowestIndex] || "received";
   };
 
@@ -72,9 +115,9 @@ export default function TrackingPage() {
       ready: "bg-green-500/10 text-green-600 border-green-500/20",
       picked_up: "bg-muted text-muted-foreground",
     };
-    return { 
-      label: statusData?.label || status, 
-      color: colorMap[status] || "bg-muted text-muted-foreground" 
+    return {
+      label: statusData?.label || status,
+      color: colorMap[status] || "bg-muted text-muted-foreground"
     };
   };
 
@@ -109,10 +152,10 @@ export default function TrackingPage() {
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
-          <img 
-            src={settings.logo || defaultLogo} 
-            alt="Logo" 
-            className="w-20 h-20 mx-auto mb-4 object-contain cursor-pointer" 
+          <img
+            src={settings.logo || defaultLogo}
+            alt="Logo"
+            className="w-20 h-20 mx-auto mb-4 object-contain cursor-pointer"
             onClick={() => navigate("/")}
           />
           <h1 className="text-2xl font-bold text-foreground">{settings.name}</h1>
@@ -130,15 +173,29 @@ export default function TrackingPage() {
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 className="flex-1"
               />
-              <Button onClick={() => handleSearch()}>
-                <Search className="w-4 h-4" />
+              <BarcodeScanner onScan={handleScan} />
+              <Button onClick={() => handleSearch()} disabled={isLoading}>
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground mt-2 text-center">
+              Ketik nomor invoice atau scan QR code dari struk
+            </p>
           </CardContent>
         </Card>
 
+        {/* Loading */}
+        {isLoading && (
+          <Card className="animate-fade-in">
+            <CardContent className="pt-6 text-center">
+              <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm text-muted-foreground mt-2">Mencari pesanan...</p>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Not Found */}
-        {notFound && (
+        {notFound && !isLoading && (
           <Card className="border-destructive/50 animate-fade-in">
             <CardContent className="pt-6 text-center">
               <p className="text-destructive">Pesanan tidak ditemukan</p>
@@ -173,11 +230,10 @@ export default function TrackingPage() {
                     {getProgressSteps(getOverallStatus(foundOrder)).map((step) => (
                       <div key={step.status} className="flex flex-col items-center relative z-10">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                            step.completed
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted text-muted-foreground"
-                          } ${step.current ? "ring-2 ring-primary ring-offset-2" : ""}`}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${step.completed
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
+                            } ${step.current ? "ring-2 ring-primary ring-offset-2" : ""}`}
                         >
                           <step.icon className="w-4 h-4" />
                         </div>

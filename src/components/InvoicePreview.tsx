@@ -36,12 +36,67 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     if (isMobile) {
-      // On mobile, download PDF instead since print dialogs are unreliable
-      toast({
-        title: "Mencetak...",
-        description: "Mengunduh PDF untuk dicetak",
-      });
-      await handleDownloadPDF();
+      // On mobile, open in new window for ESC/POS printer apps
+      const printWindow = window.open("", "_blank", "width=400,height=600");
+      if (!printWindow) {
+        toast({
+          title: "Error",
+          description: "Tidak dapat membuka preview. Izinkan popup browser.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const styles = `
+        <style>
+          @page { margin: 2mm; size: ${paperSize === "58mm" ? "58mm auto" : paperSize === "80mm" ? "80mm auto" : "A4"}; }
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: 'Courier New', monospace; font-size: ${paperSize === "58mm" ? "10px" : "11px"}; background: #fff; }
+          .invoice-container { padding: 3mm; }
+          .text-center { text-align: center; }
+          .font-bold { font-weight: bold; }
+          .text-xs { font-size: 10px; }
+          .text-sm { font-size: 11px; }
+          .text-lg { font-size: 14px; }
+          .mb-1 { margin-bottom: 4px; }
+          .mb-2 { margin-bottom: 8px; }
+          .mb-4 { margin-bottom: 16px; }
+          .border-dashed { border-style: dashed; border-color: #000; }
+          .border-t { border-top: 1px dashed #000; }
+          .border-b { border-bottom: 1px dashed #000; }
+          .py-2 { padding: 8px 0; }
+          .pt-2 { padding-top: 8px; }
+          .pt-4 { padding-top: 16px; }
+          .my-4 { margin: 16px 0; }
+          .flex { display: flex; }
+          .justify-between { justify-content: space-between; }
+          .justify-center { justify-content: center; }
+          img { max-width: 60px; height: auto; display: block; margin: 0 auto 8px; }
+          .text-muted-foreground { color: #666; }
+          .font-medium { font-weight: 500; }
+        </style>
+      `;
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Invoice ${order.invoiceNumber}</title>
+            ${styles}
+          </head>
+          <body>
+            ${printContent.innerHTML}
+            <script>
+              window.onload = function() {
+                setTimeout(function() { window.print(); }, 300);
+              };
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
       return;
     }
 
