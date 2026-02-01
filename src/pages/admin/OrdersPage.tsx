@@ -267,8 +267,14 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
           phone: formData.customerPhone,
         });
         customerId = newCustomer.id;
-      } catch (err) {
-        toast({ title: "Error", description: "Gagal menambahkan customer baru", variant: "destructive" });
+      } catch (err: any) {
+        console.error("Add customer error:", err);
+        const errorMsg = err?.message || err?.code || "Unknown error";
+        toast({
+          title: "Error",
+          description: `Gagal menambahkan customer: ${errorMsg}`,
+          variant: "destructive"
+        });
         return;
       }
     }

@@ -191,7 +191,13 @@ const mapSettingsFromDB = (data: any): StoreSettings => ({
   qrPayment: data.qr_payment,
   logo: data.logo,
   whatsappNotificationEnabled: data.whatsapp_notification_enabled,
+  invoiceTerms: data.invoice_terms,
+  whatsappTemplate: data.whatsapp_template,
   thermalTerms: data.thermal_terms,
+  sidebarBgColor: data.sidebar_bg_color,
+  sidebarTextColor: data.sidebar_text_color,
+  sidebarHoverColor: data.sidebar_hover_color,
+  sidebarActiveColor: data.sidebar_active_color,
 });
 
 const initialSettings: StoreSettings = {
@@ -631,6 +637,27 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
 
     if (error) {
       console.error("Failed to add customer:", error);
+
+      // Handle duplicate phone error - try to fetch existing customer
+      if (error.code === "23505" || error.message?.includes("duplicate") || error.message?.includes("unique")) {
+        console.log("Duplicate phone detected, fetching existing customer...");
+        const { data: existingCustomer } = await supabase
+          .from("customers")
+          .select("*")
+          .eq("phone", customerData.phone)
+          .single();
+
+        if (existingCustomer) {
+          const mappedCustomer = mapCustomerFromDB(existingCustomer);
+          // Add to local state if not already there
+          const state = get();
+          if (!state.customers.find(c => c.id === mappedCustomer.id)) {
+            set((state) => ({ customers: [...state.customers, mappedCustomer] }));
+          }
+          return mappedCustomer;
+        }
+      }
+
       throw error;
     }
 
@@ -871,6 +898,14 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
     if (settings.qrPayment !== undefined) dbUpdates.qr_payment = settings.qrPayment;
     if (settings.logo !== undefined) dbUpdates.logo = settings.logo;
     if (settings.whatsappNotificationEnabled !== undefined) dbUpdates.whatsapp_notification_enabled = settings.whatsappNotificationEnabled;
+    if (settings.invoiceTerms !== undefined) dbUpdates.invoice_terms = settings.invoiceTerms;
+    if (settings.whatsappTemplate !== undefined) dbUpdates.whatsapp_template = settings.whatsappTemplate;
+    if (settings.thermalTerms !== undefined) dbUpdates.thermal_terms = settings.thermalTerms;
+    if (settings.sidebarBgColor !== undefined) dbUpdates.sidebar_bg_color = settings.sidebarBgColor;
+    if (settings.sidebarTextColor !== undefined) dbUpdates.sidebar_text_color = settings.sidebarTextColor;
+    if (settings.sidebarHoverColor !== undefined) dbUpdates.sidebar_hover_color = settings.sidebarHoverColor;
+    if (settings.sidebarActiveColor !== undefined) dbUpdates.sidebar_active_color = settings.sidebarActiveColor;
+
 
     // Assuming there is only one settings row, but we don't know the ID? 
     // We should probably upsert using a known method or fetch it first. 
