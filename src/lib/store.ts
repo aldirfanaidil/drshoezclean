@@ -302,12 +302,12 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
         { data: branchesData, error: branchesError },
         { data: settingsData, error: settingsError },
       ] = await Promise.all([
-        // Limit orders to 50 most recent for fast initial load
-        supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(50),
-        supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(100),
+        // Fetch all orders (no limit)
+        supabase.from("orders").select("*").order("created_at", { ascending: false }),
+        supabase.from("customers").select("*").order("created_at", { ascending: false }),
         supabase.from("discounts").select("*"),
-        // Limit cash flows to 50 most recent
-        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }).limit(50),
+        // Fetch all cash flows (no limit)
+        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }),
         supabase.from("app_users").select("*"),
         supabase.from("branches").select("*"),
         supabase.from("store_settings").select("*").single(),
@@ -412,10 +412,10 @@ export const useAppStore = create<AppState>()(persist((set, get) => ({
         { data: cashFlowsData },
         { data: branchesData },
       ] = await Promise.all([
-        supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(50),
-        supabase.from("customers").select("*").order("created_at", { ascending: false }).limit(100),
+        supabase.from("orders").select("*").order("created_at", { ascending: false }),
+        supabase.from("customers").select("*").order("created_at", { ascending: false }),
         supabase.from("discounts").select("*"),
-        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }).limit(50),
+        supabase.from("cash_flows").select("*").order("created_at", { ascending: false }),
         supabase.from("branches").select("*"),
       ]);
 
