@@ -42,7 +42,10 @@ import {
 } from "lucide-react";
 import { format, startOfWeek, startOfMonth, startOfYear, isAfter, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
+<<<<<<< HEAD
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
 const ITEMS_PER_PAGE = 10;
 
@@ -53,6 +56,7 @@ export default function CashFlowPage() {
   const { cashFlows, addCashFlow, deleteCashFlow } = useAppStore();
   const [period, setPeriod] = useState<FilterPeriod>("month");
   const [currentPage, setCurrentPage] = useState(1);
+<<<<<<< HEAD
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
@@ -61,6 +65,8 @@ export default function CashFlowPage() {
     const years = cashFlows.map((cf) => new Date(cf.date).getFullYear());
     return [...new Set(years)].sort((a, b) => b - a);
   }, [cashFlows]);
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -93,6 +99,7 @@ export default function CashFlowPage() {
 
   const filteredCashFlows = useMemo(() => {
     return cashFlows
+<<<<<<< HEAD
       .filter((cf) => {
         // Month/Year filter (takes priority if set)
         if (selectedMonth !== null || selectedYear !== null) {
@@ -106,6 +113,11 @@ export default function CashFlowPage() {
       })
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [cashFlows, filterStartDate, selectedMonth, selectedYear]);
+=======
+      .filter((cf) => isAfter(parseISO(cf.date), filterStartDate))
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [cashFlows, filterStartDate]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const stats = useMemo(() => {
     const income = filteredCashFlows
@@ -121,10 +133,17 @@ export default function CashFlowPage() {
     return { income, expense, profit };
   }, [filteredCashFlows]);
 
+<<<<<<< HEAD
   // Reset page when period or month/year changes
   useMemo(() => {
     setCurrentPage(1);
   }, [period, selectedMonth, selectedYear]);
+=======
+  // Reset page when period changes
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [period]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   // Pagination
   const totalPages = Math.ceil(filteredCashFlows.length / ITEMS_PER_PAGE);
@@ -172,6 +191,7 @@ export default function CashFlowPage() {
           <h1 className="text-2xl font-bold text-foreground">Arus Kas</h1>
           <p className="text-muted-foreground">Kelola pendapatan dan pengeluaran</p>
         </div>
+<<<<<<< HEAD
         <div className="flex flex-wrap gap-2">
           <MonthYearFilter
             selectedMonth={selectedMonth}
@@ -194,6 +214,21 @@ export default function CashFlowPage() {
               </SelectContent>
             </Select>
           )}
+=======
+        <div className="flex gap-2">
+          <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
+            <SelectTrigger className="w-40">
+              <Calendar className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Hari Ini</SelectItem>
+              <SelectItem value="week">Minggu Ini</SelectItem>
+              <SelectItem value="month">Bulan Ini</SelectItem>
+              <SelectItem value="year">Tahun Ini</SelectItem>
+            </SelectContent>
+          </Select>
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
           <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
             <Plus className="w-4 h-4 mr-2" /> Tambah Transaksi
           </Button>

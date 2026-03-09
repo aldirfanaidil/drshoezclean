@@ -47,7 +47,10 @@ import {
   Zap,
 } from "lucide-react";
 import { BranchFilter } from "@/components/BranchFilter";
+<<<<<<< HEAD
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import InvoicePreview from "@/components/InvoicePreview";
@@ -138,6 +141,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
   const [branchFilter, setBranchFilter] = useState<string>("all");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+<<<<<<< HEAD
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
@@ -146,6 +150,8 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
     const years = orders.map((o) => new Date(o.createdAt).getFullYear());
     return [...new Set(years)].sort((a, b) => b - a);
   }, [orders]);
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -196,6 +202,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
       result = result.filter((o) => o.branchId === currentUser.branchId);
     }
 
+<<<<<<< HEAD
     // Month/Year filter
     if (selectedMonth !== null || selectedYear !== null) {
       result = result.filter((o) => {
@@ -206,6 +213,8 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
       });
     }
 
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -228,7 +237,11 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
     }
 
     return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+<<<<<<< HEAD
   }, [orders, searchQuery, statusFilter, branchFilter, currentUser, selectedMonth, selectedYear]);
+=======
+  }, [orders, searchQuery, statusFilter, branchFilter, currentUser]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const paginatedOrders = useMemo(() => {
     const start = (currentPage - 1) * rowsPerPage;
@@ -465,6 +478,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
               onChange={setBranchFilter}
               branches={branches}
             />
+<<<<<<< HEAD
             <MonthYearFilter
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
@@ -472,6 +486,8 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
               onYearChange={(y) => { setSelectedYear(y); setCurrentPage(1); }}
               availableYears={availableYears}
             />
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
             <Select value={String(rowsPerPage)} onValueChange={(v) => setRowsPerPage(Number(v))}>
               <SelectTrigger className="w-24">
                 <SelectValue />

@@ -23,13 +23,17 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Users } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+<<<<<<< HEAD
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
 export default function CustomersPage() {
   const { customers, orders } = useAppStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+<<<<<<< HEAD
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
@@ -38,10 +42,13 @@ export default function CustomersPage() {
     const years = customers.map((c) => new Date(c.createdAt).getFullYear());
     return [...new Set(years)].sort((a, b) => b - a);
   }, [customers]);
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const filteredCustomers = useMemo(() => {
     let result = customers;
 
+<<<<<<< HEAD
     // Month/Year filter (by createdAt)
     if (selectedMonth !== null || selectedYear !== null) {
       result = result.filter((c) => {
@@ -52,6 +59,8 @@ export default function CustomersPage() {
       });
     }
 
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -62,7 +71,11 @@ export default function CustomersPage() {
     }
 
     return result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+<<<<<<< HEAD
   }, [customers, searchQuery, selectedMonth, selectedYear]);
+=======
+  }, [customers, searchQuery]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   // Pagination logic
   const paginatedCustomers = useMemo(() => {
@@ -72,10 +85,17 @@ export default function CustomersPage() {
 
   const totalPages = Math.ceil(filteredCustomers.length / rowsPerPage);
 
+<<<<<<< HEAD
   // Reset to page 1 when search or filter changes
   useMemo(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedMonth, selectedYear]);
+=======
+  // Reset to page 1 when search changes
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const totalCustomers = customers.length;
   const totalSpent = customers.reduce((acc, c) => acc + c.totalSpent, 0);
@@ -131,6 +151,7 @@ export default function CustomersPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+<<<<<<< HEAD
             <MonthYearFilter
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
@@ -138,6 +159,8 @@ export default function CustomersPage() {
               onYearChange={setSelectedYear}
               availableYears={availableYears}
             />
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
             <Select value={String(rowsPerPage)} onValueChange={(v) => { setRowsPerPage(Number(v)); setCurrentPage(1); }}>
               <SelectTrigger className="w-24">
                 <SelectValue />

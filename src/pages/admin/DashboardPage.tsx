@@ -33,7 +33,10 @@ import {
   Activity,
 } from "lucide-react";
 import { BranchFilter } from "@/components/BranchFilter";
+<<<<<<< HEAD
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 import {
   AreaChart,
   Area,
@@ -98,6 +101,7 @@ export default function DashboardPage() {
   const [selectedBranch, setSelectedBranch] = useState<string>("all");
   const [selectedKPI, setSelectedKPI] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState(new Date());
+<<<<<<< HEAD
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
@@ -106,6 +110,8 @@ export default function DashboardPage() {
     const years = orders.map((o) => new Date(o.createdAt).getFullYear());
     return [...new Set(years)].sort((a, b) => b - a);
   }, [orders]);
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Auto-refresh every 30 seconds
@@ -140,6 +146,7 @@ export default function DashboardPage() {
 
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
+<<<<<<< HEAD
       const orderDate = parseISO(order.createdAt);
 
       // Month/Year filter (takes priority if set)
@@ -151,13 +158,22 @@ export default function DashboardPage() {
         if (!isAfter(orderDate, filterStartDate)) return false;
       }
 
+=======
+      const afterStartDate = isAfter(parseISO(order.createdAt), filterStartDate);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       const matchesBranch =
         selectedBranch === "all" ||
         (selectedBranch === "pusat" && !order.branchId) ||
         order.branchId === selectedBranch;
+<<<<<<< HEAD
       return matchesBranch;
     });
   }, [orders, filterStartDate, selectedBranch, selectedMonth, selectedYear, lastUpdate]);
+=======
+      return afterStartDate && matchesBranch;
+    });
+  }, [orders, filterStartDate, selectedBranch, lastUpdate]);
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const stats = useMemo(() => {
     const revenue = filteredOrders
@@ -284,6 +300,7 @@ export default function DashboardPage() {
     return Object.values(branchStats).filter(b => b.orders > 0);
   }, [filteredOrders, branches, lastUpdate]);
 
+<<<<<<< HEAD
   // Shoe service statistics
   const shoeServiceStats = useMemo(() => {
     const stats = { reguler: 0, express: 0, unyellowing: 0, recolour: 0, repaint: 0 };
@@ -320,6 +337,8 @@ export default function DashboardPage() {
     { name: "Repaint", count: shoeServiceStats.repaint, fill: "hsl(var(--accent))" },
   ], [shoeServiceStats]);
 
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
   const getKPIDetails = (kpiType: string) => {
     switch (kpiType) {
       case "revenue":
@@ -368,6 +387,7 @@ export default function DashboardPage() {
             onChange={setSelectedBranch}
             branches={branches}
           />
+<<<<<<< HEAD
           <MonthYearFilter
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
@@ -389,6 +409,20 @@ export default function DashboardPage() {
               </SelectContent>
             </Select>
           )}
+=======
+          <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
+            <SelectTrigger className="w-40">
+              <Calendar className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="day">Hari Ini</SelectItem>
+              <SelectItem value="week">Minggu Ini</SelectItem>
+              <SelectItem value="month">Bulan Ini</SelectItem>
+              <SelectItem value="year">Tahun Ini</SelectItem>
+            </SelectContent>
+          </Select>
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
         </div>
       </div>
 
@@ -642,6 +676,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+<<<<<<< HEAD
       {/* Shoe Service Statistics */}
       <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.7s" }}>
         <CardHeader>
@@ -696,6 +731,8 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
+=======
+>>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       {/* KPI Detail Dialog */}
       <Dialog open={!!selectedKPI} onOpenChange={() => setSelectedKPI(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
