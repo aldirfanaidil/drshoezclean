@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Schema View</title>
+    <!-- Tailwind CSS (Validation mostly for quick styling access if needed, but using custom CSS for specific table look) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            padding: 40px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+            border-left: 5px solid #3b82f6;
+            padding-left: 15px;
+        }
+
+        /* Table Styling */
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background-color: #f9fafb;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #4b5563;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background-color: #f9fafb;
+        }
+
+        /* Specific Status Colors */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-blue {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-green {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-yellow {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-red {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-gray {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Button Styling */
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-export:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-export svg {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Helper for ensuring whitespace in long text */
+        .col-text {
+            min-width: 200px;
+        }
+    </style>
+    <!-- HTML2Canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- TABLE 1: USERS -->
+        <div class="table-section">
+            <div class="header-row">
+                <h2>1. Data Users</h2>
+                <button onclick="exportTable('table-users', 'tabel_users')" class="btn-export">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PNG
+                </button>
+            </div>
+            <div id="table-users" class="table-wrapper bg-white p-4">
+                <!-- Added bg-white p-4 to wrapper to capture padding in image -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Nama Field</th>
+                            <th>Tipe Data</th>
+                            <th>Panjang</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="font-medium">id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Unik User (Auto Increment)</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-medium">nim_nip</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>50</td>
+                            <td>Nomor Induk (NIM/NIP)</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="font-medium">name</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>100</td>
+                            <td>Nama Lengkap Pengguna</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="font-medium">password</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>255</td>
+                            <td>Password (Terenkripsi Hash)</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="font-medium">role</td>
+                            <td><span class="badge badge-yellow">ENUM</span></td>
+                            <td>-</td>
+                            <td>Level (mahasiswa, admin, super_admin)</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td class="font-medium">created_at</td>
+                            <td><span class="badge badge-gray">TIMESTAMP</span></td>
+                            <td>-</td>
+                            <td>Waktu pendaftaran akun</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TABLE 2: CATEGORIES -->
+        <div class="table-section">
+            <div class="header-row">
+                <h2>2. Data Categories</h2>
+                <button onclick="exportTable('table-categories', 'tabel_kategori')" class="btn-export">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PNG
+                </button>
+            </div>
+            <div id="table-categories" class="table-wrapper bg-white p-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Nama Field</th>
+                            <th>Tipe Data</th>
+                            <th>Panjang</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="font-medium">id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Kategori</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-medium">name</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>50</td>
+                            <td>Nama Kategori (Contoh: Akademik)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TABLE 3: COMPLAINTS -->
+        <div class="table-section">
+            <div class="header-row">
+                <h2>3. Data Complaints</h2>
+                <button onclick="exportTable('table-complaints', 'tabel_pengaduan')" class="btn-export">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PNG
+                </button>
+            </div>
+            <div id="table-complaints" class="table-wrapper bg-white p-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Nama Field</th>
+                            <th>Tipe Data</th>
+                            <th>Panjang</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="font-medium">id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Pengaduan</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-medium">user_id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Pelapor</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="font-medium">category_id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Kategori Pengaduan</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="font-medium">title</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>150</td>
+                            <td>Judul Pengaduan</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="font-medium">description</td>
+                            <td><span class="badge badge-red">TEXT</span></td>
+                            <td>-</td>
+                            <td>Isi Detail Keluhan</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td class="font-medium">priority</td>
+                            <td><span class="badge badge-yellow">ENUM</span></td>
+                            <td>-</td>
+                            <td>Tingkat urgensi (Rendah/Sedang/Tinggi)</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td class="font-medium">status</td>
+                            <td><span class="badge badge-yellow">ENUM</span></td>
+                            <td>-</td>
+                            <td>Status Laporan (Diajukan/Diproses/Selesai)</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td class="font-medium">attachment</td>
+                            <td><span class="badge badge-green">VARCHAR</span></td>
+                            <td>255</td>
+                            <td>Nama file foto bukti (jika ada)</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td class="font-medium">created_at</td>
+                            <td><span class="badge badge-gray">TIMESTAMP</span></td>
+                            <td>-</td>
+                            <td>Waktu pengaduan dibuat</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TABLE 4: RESPONSES -->
+        <div class="table-section">
+            <div class="header-row">
+                <h2>4. Data Responses</h2>
+                <button onclick="exportTable('table-responses', 'tabel_tanggapan')" class="btn-export">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PNG
+                </button>
+            </div>
+            <div id="table-responses" class="table-wrapper bg-white p-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Nama Field</th>
+                            <th>Tipe Data</th>
+                            <th>Panjang</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="font-medium">id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Tanggapan</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-medium">complaint_id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Pengaduan yang ditanggapi</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="font-medium">user_id</td>
+                            <td><span class="badge badge-blue">INT</span></td>
+                            <td>11</td>
+                            <td>ID Penanggap (Admin/Mahasiswa)</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="font-medium">response</td>
+                            <td><span class="badge badge-red">TEXT</span></td>
+                            <td>-</td>
+                            <td>Isi pesan tanggapan</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="font-medium">created_at</td>
+                            <td><span class="badge badge-gray">TIMESTAMP</span></td>
+                            <td>-</td>
+                            <td>Waktu tanggapan dikirim</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TABLE 5: TESTING SCENARIOS -->
+        <div class="table-section">
+            <div class="header-row">
+                <h2>5. Skenario Pengujian</h2>
+                <button onclick="exportTable('table-testing', 'tabel_skenario_pengujian')" class="btn-export">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PNG
+                </button>
+            </div>
+            <div id="table-testing" class="table-wrapper bg-white p-4">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="5%">No</th>
+                            <th>Skenario Pengujian</th>
+                            <th>Langkah Pengujian</th>
+                            <th>Hasil yang Diharapkan</th>
+                            <th>Hasil Pengujian</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="font-medium">Login Berhasil</td>
+                            <td>Memasukkan NIM dan Password yang benar sesuai database.</td>
+                            <td>Sistem mengarahkan ke Dashboard Mahasiswa.</td>
+                            <td>Sesuai Harapan</td>
+                            <td><span class="badge badge-green">Valid</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="font-medium">Login Gagal</td>
+                            <td>Memasukkan Password yang salah.</td>
+                            <td>Sistem tetap di halaman login dan menampilkan pesan error "Password Salah".</td>
+                            <td>Muncul Pesan Error</td>
+                            <td><span class="badge badge-green">Valid</span></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="font-medium">Input Pengaduan</td>
+                            <td>Mengisi semua form wajib dan mengklik tombol Kirim.</td>
+                            <td>Data tersimpan di database dan muncul di daftar riwayat.</td>
+                            <td>Data Tersimpan</td>
+                            <td><span class="badge badge-green">Valid</span></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="font-medium">Validasi Admin</td>
+                            <td>Admin mengubah status laporan dari "Diajukan" menjadi "Diproses".</td>
+                            <td>Status pada dashboard mahasiswa berubah menjadi "Diproses".</td>
+                            <td>Status Berubah</td>
+                            <td><span class="badge badge-green">Valid</span></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="font-medium">Uji Responsif</td>
+                            <td>Mengakses sistem melalui browser HP atau memperkecil ukuran browser laptop.</td>
+                            <td>Layout menyesuaikan layar (menu sidebar menjadi hamburger menu/hilang).</td>
+                            <td>Tampilan Menyesuaikan</td>
+                            <td><span class="badge badge-green">Valid</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-400 text-sm mt-10">
+            Generated at <span id="timestamp"></span>
+        </div>
+
+    </div>
+
+    <!-- Export Logic -->
+    <script>
+        document.getElementById('timestamp').innerText = new Date().toLocaleString();
+
+        function exportTable(elementId, fileName) {
+            const element = document.getElementById(elementId);
+
+            // Add a temporary loading state to the button
+            const btn = element.parentNode.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Generating...';
+            btn.disabled = true;
+
+            html2canvas(element, {
+                scale: 3, // High resolution
+                backgroundColor: "#ffffff", // Force white background
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Convert canvas to bio
+                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+
+                // Create link and trigger download
+                const link = document.createElement('a');
+                link.download = `${fileName}.png`;
+                link.href = image;
+                link.click();
+
+                // Restore button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("Export failed:", err);
+                alert("Gagal mengexport gambar. Silakan coba lagi.");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+
+</html>

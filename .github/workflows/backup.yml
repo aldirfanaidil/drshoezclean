@@ -1,0 +1,72 @@
+name: Backup Database Harian
+
+on:
+  schedule:
+    - cron: '0 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 1. Install Postgres 17 (Terbaru)
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17 zip
+
+      - name: 2. Download & Zip Database
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          # Buat nama file
+          DATE=$(date +'%Y-%m-%d')
+          SQLFILE="backup-$DATE.sql"
+          ZIPFILE="backup-$DATE.zip"
+          
+          echo "Sedang mendownload database..."
+          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URL" -F p > "$SQLFILE"
+          
+          echo "Sedang membungkus ke ZIP..."
+          zip "$ZIPFILE" "$SQLFILE"
+          
+          # Simpan nama file ke environment variable biar bisa dibaca Python
+          echo "ZIP_FILENAME=$ZIPFILE" >> $GITHUB_ENV
+
+      - name: 3. Kirim Email Pakai Python (Lebih Stabil)
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          FILE_TO_SEND: ${{ env.ZIP_FILENAME }}
+        run: |
+          python3 -c "
+          import smtplib, os, ssl
+          from email.message import EmailMessage
+
+          email_user = os.environ['MAIL_USERNAME']
+          email_pass = os.environ['MAIL_PASSWORD']
+          filename = os.environ['FILE_TO_SEND']
+
+          msg = EmailMessage()
+          msg['Subject'] = f'Backup Database Laundry ({filename})'
+          msg['From'] = email_user
+          msg['To'] = email_user
+          msg.set_content('Halo Boss! Ini file backup database laundry dalam format ZIP. Aman dan Rapih.')
+
+          # Lampirkan file ZIP dengan nama yang benar
+          with open(filename, 'rb') as f:
+              file_data = f.read()
+              msg.add_attachment(file_data, maintype='application', subtype='zip', filename=filename)
+
+          # Kirim ke Gmail
+          context = ssl.create_default_context()
+          with smtplib.SMTP('smtp.gmail.com', 587) as server:
+              server.starttls(context=context)
+              server.login(email_user, email_pass)
+              server.send_message(msg)
+          print('Email berhasil dikirim dengan nama file yang benar!')
+          "
