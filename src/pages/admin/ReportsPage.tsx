@@ -27,10 +27,7 @@ import {
   BarChart,
   Bar,
   Legend,
-<<<<<<< HEAD
   Cell,
-=======
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 } from "recharts";
 import { TrendingUp, DollarSign, Calendar, FileText, Download, FileSpreadsheet, CalendarRange } from "lucide-react";
 import { format, subDays, startOfWeek, startOfMonth, startOfYear, isAfter, parseISO, isBefore, startOfDay, endOfDay } from "date-fns";
@@ -39,10 +36,7 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { BranchFilter } from "@/components/BranchFilter";
-<<<<<<< HEAD
 import { MonthYearFilter } from "@/components/MonthYearFilter";
-=======
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 import { cn } from "@/lib/utils";
 
 type FilterPeriod = "week" | "month" | "year" | "custom";
@@ -54,7 +48,6 @@ export default function ReportsPage() {
   const [selectedBranch, setSelectedBranch] = useState<string>("all");
   const [customStartDate, setCustomStartDate] = useState<Date | undefined>(subDays(new Date(), 7));
   const [customEndDate, setCustomEndDate] = useState<Date | undefined>(new Date());
-<<<<<<< HEAD
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
 
@@ -63,8 +56,6 @@ export default function ReportsPage() {
     const years = orders.map((o) => new Date(o.createdAt).getFullYear());
     return [...new Set(years)].sort((a, b) => b - a);
   }, [orders]);
-=======
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const filterStartDate = useMemo(() => {
     const now = new Date();
@@ -92,8 +83,6 @@ export default function ReportsPage() {
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       const orderDate = parseISO(order.createdAt);
-<<<<<<< HEAD
-
       // Month/Year filter (takes priority if set)
       if (selectedMonth !== null || selectedYear !== null) {
         if (selectedMonth !== null && orderDate.getMonth() !== selectedMonth) return false;
@@ -103,25 +92,14 @@ export default function ReportsPage() {
         const beforeEndDate = isBefore(orderDate, filterEndDate) || orderDate.getTime() === filterEndDate.getTime();
         if (!afterStartDate || !beforeEndDate) return false;
       }
-
-=======
-      const afterStartDate = isAfter(orderDate, filterStartDate) || orderDate.getTime() === filterStartDate.getTime();
-      const beforeEndDate = isBefore(orderDate, filterEndDate) || orderDate.getTime() === filterEndDate.getTime();
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       const isPaid = order.paymentStatus === "paid";
       const matchesBranch =
         selectedBranch === "all" ||
         (selectedBranch === "pusat" && !order.branchId) ||
         order.branchId === selectedBranch;
-<<<<<<< HEAD
       return isPaid && matchesBranch;
     });
   }, [orders, filterStartDate, filterEndDate, selectedBranch, selectedMonth, selectedYear]);
-=======
-      return afterStartDate && beforeEndDate && isPaid && matchesBranch;
-    });
-  }, [orders, filterStartDate, filterEndDate, selectedBranch]);
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
 
   const stats = useMemo(() => {
     const revenue = filteredOrders.reduce((acc, o) => acc + o.total, 0);
@@ -192,7 +170,6 @@ export default function ReportsPage() {
       .slice(0, 5);
   }, [filteredOrders]);
 
-<<<<<<< HEAD
   // Shoe service statistics
   const shoeServiceStats = useMemo(() => {
     const stats = { reguler: 0, express: 0, unyellowing: 0, recolour: 0, repaint: 0 };
@@ -228,9 +205,6 @@ export default function ReportsPage() {
     { name: "Recolour", count: shoeServiceStats.recolour, fill: "hsl(var(--success))" },
     { name: "Repaint", count: shoeServiceStats.repaint, fill: "hsl(var(--accent))" },
   ], [shoeServiceStats]);
-
-=======
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
   // Branch comparison data
   const branchComparisonData = useMemo(() => {
     const branchStats: Record<string, { name: string; revenue: number; orders: number }> = {
@@ -317,37 +291,21 @@ export default function ReportsPage() {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Laporan");
-<<<<<<< HEAD
 
     const periodLabel = period === "custom"
       ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}`
       : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
     XLSX.writeFile(wb, `Laporan_${periodLabel}_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
 
-=======
-    
-    const periodLabel = period === "custom" 
-      ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}` 
-      : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
-    XLSX.writeFile(wb, `Laporan_${periodLabel}_${format(new Date(), "yyyy-MM-dd")}.xlsx`);
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     toast({ title: "Berhasil", description: "Laporan berhasil diekspor ke Excel" });
   };
 
   const exportAllBranchesToExcel = () => {
     const wb = XLSX.utils.book_new();
-<<<<<<< HEAD
     const periodLabel = period === "custom"
       ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}`
       : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
 
-=======
-    const periodLabel = period === "custom" 
-      ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}` 
-      : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     // Export Pusat
     const pusatOrders = getOrdersForBranch("pusat");
     if (pusatOrders.length > 0) {
@@ -390,7 +348,6 @@ export default function ReportsPage() {
   const exportToPDF = () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-<<<<<<< HEAD
 
     doc.setFontSize(18);
     doc.text("Laporan Pendapatan", pageWidth / 2, 20, { align: "center" });
@@ -399,16 +356,6 @@ export default function ReportsPage() {
     doc.text(`Periode: ${getPeriodLabel()}`, pageWidth / 2, 30, { align: "center" });
     doc.text(`Dicetak: ${format(new Date(), "dd MMMM yyyy HH:mm", { locale: id })}`, pageWidth / 2, 38, { align: "center" });
 
-=======
-    
-    doc.setFontSize(18);
-    doc.text("Laporan Pendapatan", pageWidth / 2, 20, { align: "center" });
-    
-    doc.setFontSize(12);
-    doc.text(`Periode: ${getPeriodLabel()}`, pageWidth / 2, 30, { align: "center" });
-    doc.text(`Dicetak: ${format(new Date(), "dd MMMM yyyy HH:mm", { locale: id })}`, pageWidth / 2, 38, { align: "center" });
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     // Summary
     doc.setFontSize(14);
     doc.text("Ringkasan", 14, 55);
@@ -416,11 +363,7 @@ export default function ReportsPage() {
     doc.text(`Total Pendapatan: ${formatCurrency(stats.revenue)}`, 14, 65);
     doc.text(`Total Pesanan: ${stats.totalOrders}`, 14, 73);
     doc.text(`Rata-rata Pesanan: ${formatCurrency(stats.avgOrderValue)}`, 14, 81);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     // Top Services
     doc.setFontSize(14);
     doc.text("Layanan Terlaris", 14, 100);
@@ -428,20 +371,12 @@ export default function ReportsPage() {
     topServices.forEach((service, idx) => {
       doc.text(`${idx + 1}. ${service.name}: ${formatCurrency(service.revenue)} (${service.count}x)`, 14, 110 + (idx * 8));
     });
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     // Orders table header
     const tableTop = 160;
     doc.setFontSize(14);
     doc.text("Detail Pesanan", 14, tableTop - 10);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
     doc.text("Invoice", 14, tableTop);
@@ -449,19 +384,11 @@ export default function ReportsPage() {
     doc.text("Total", 110, tableTop);
     doc.text("Status", 145, tableTop);
     doc.text("Tanggal", 170, tableTop);
-<<<<<<< HEAD
 
     doc.setFont("helvetica", "normal");
     let y = tableTop + 8;
     const maxRows = 15;
 
-=======
-    
-    doc.setFont("helvetica", "normal");
-    let y = tableTop + 8;
-    const maxRows = 15;
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     filteredOrders.slice(0, maxRows).forEach((order) => {
       doc.text(order.invoiceNumber.substring(0, 15), 14, y);
       doc.text(order.customerName.substring(0, 20), 50, y);
@@ -470,46 +397,26 @@ export default function ReportsPage() {
       doc.text(format(parseISO(order.createdAt), "dd/MM/yy"), 170, y);
       y += 7;
     });
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     if (filteredOrders.length > maxRows) {
       doc.text(`... dan ${filteredOrders.length - maxRows} pesanan lainnya`, 14, y + 5);
     }
 
-<<<<<<< HEAD
     const periodFileName = period === "custom"
       ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}`
       : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
 
     doc.save(`Laporan_${periodFileName}_${format(new Date(), "yyyy-MM-dd")}.pdf`);
 
-=======
-    const periodFileName = period === "custom" 
-      ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}` 
-      : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
-    
-    doc.save(`Laporan_${periodFileName}_${format(new Date(), "yyyy-MM-dd")}.pdf`);
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     toast({ title: "Berhasil", description: "Laporan berhasil diekspor ke PDF" });
   };
 
   const exportAllBranchesToPDF = () => {
     const periodLabel = getPeriodLabel();
-<<<<<<< HEAD
     const periodFileName = period === "custom"
       ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}`
       : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
 
-=======
-    const periodFileName = period === "custom" 
-      ? `Custom_${format(customStartDate || new Date(), "yyyyMMdd")}_${format(customEndDate || new Date(), "yyyyMMdd")}` 
-      : period === "week" ? "Mingguan" : period === "month" ? "Bulanan" : "Tahunan";
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     // Export for each branch including Pusat
     const allBranches = [
       { id: "pusat", name: "Pusat" },
@@ -522,7 +429,6 @@ export default function ReportsPage() {
 
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
-<<<<<<< HEAD
 
       doc.setFontSize(18);
       doc.text(`Laporan ${branch.name}`, pageWidth / 2, 20, { align: "center" });
@@ -535,40 +441,18 @@ export default function ReportsPage() {
       const branchRevenue = branchOrders.reduce((acc, o) => acc + o.total, 0);
       const branchAvg = branchOrders.length > 0 ? branchRevenue / branchOrders.length : 0;
 
-=======
-      
-      doc.setFontSize(18);
-      doc.text(`Laporan ${branch.name}`, pageWidth / 2, 20, { align: "center" });
-      
-      doc.setFontSize(12);
-      doc.text(`Periode: ${periodLabel}`, pageWidth / 2, 30, { align: "center" });
-      doc.text(`Dicetak: ${format(new Date(), "dd MMMM yyyy HH:mm", { locale: id })}`, pageWidth / 2, 38, { align: "center" });
-      
-      // Summary for this branch
-      const branchRevenue = branchOrders.reduce((acc, o) => acc + o.total, 0);
-      const branchAvg = branchOrders.length > 0 ? branchRevenue / branchOrders.length : 0;
-      
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       doc.setFontSize(14);
       doc.text("Ringkasan", 14, 55);
       doc.setFontSize(11);
       doc.text(`Total Pendapatan: ${formatCurrency(branchRevenue)}`, 14, 65);
       doc.text(`Total Pesanan: ${branchOrders.length}`, 14, 73);
       doc.text(`Rata-rata Pesanan: ${formatCurrency(branchAvg)}`, 14, 81);
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       // Orders table header
       const tableTop = 100;
       doc.setFontSize(14);
       doc.text("Detail Pesanan", 14, tableTop - 10);
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       doc.setFontSize(9);
       doc.setFont("helvetica", "bold");
       doc.text("Invoice", 14, tableTop);
@@ -576,19 +460,11 @@ export default function ReportsPage() {
       doc.text("Total", 110, tableTop);
       doc.text("Metode", 145, tableTop);
       doc.text("Tanggal", 170, tableTop);
-<<<<<<< HEAD
 
       doc.setFont("helvetica", "normal");
       let y = tableTop + 8;
       const maxRows = 20;
 
-=======
-      
-      doc.setFont("helvetica", "normal");
-      let y = tableTop + 8;
-      const maxRows = 20;
-      
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
       branchOrders.slice(0, maxRows).forEach((order) => {
         doc.text(order.invoiceNumber.substring(0, 15), 14, y);
         doc.text(order.customerName.substring(0, 20), 50, y);
@@ -597,7 +473,6 @@ export default function ReportsPage() {
         doc.text(format(parseISO(order.createdAt), "dd/MM/yy"), 170, y);
         y += 7;
       });
-<<<<<<< HEAD
 
       if (branchOrders.length > maxRows) {
         doc.text(`... dan ${branchOrders.length - maxRows} pesanan lainnya`, 14, y + 5);
@@ -607,17 +482,6 @@ export default function ReportsPage() {
       doc.save(`Laporan_${safeName}_${periodFileName}_${format(new Date(), "yyyy-MM-dd")}.pdf`);
     });
 
-=======
-      
-      if (branchOrders.length > maxRows) {
-        doc.text(`... dan ${branchOrders.length - maxRows} pesanan lainnya`, 14, y + 5);
-      }
-      
-      const safeName = branch.name.replace(/[^a-zA-Z0-9]/g, "_");
-      doc.save(`Laporan_${safeName}_${periodFileName}_${format(new Date(), "yyyy-MM-dd")}.pdf`);
-    });
-    
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     toast({ title: "Berhasil", description: "Laporan per cabang berhasil diekspor ke PDF" });
   };
 
@@ -655,7 +519,6 @@ export default function ReportsPage() {
             onChange={setSelectedBranch}
             branches={branches}
           />
-<<<<<<< HEAD
           <MonthYearFilter
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
@@ -679,22 +542,6 @@ export default function ReportsPage() {
           )}
 
           {period === "custom" && selectedMonth === null && selectedYear === null && (
-=======
-          <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
-            <SelectTrigger className="w-40">
-              <Calendar className="w-4 h-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="week">Minggu Ini</SelectItem>
-              <SelectItem value="month">Bulan Ini</SelectItem>
-              <SelectItem value="year">Tahun Ini</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          {period === "custom" && (
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
             <div className="flex items-center gap-2">
               <Popover>
                 <PopoverTrigger asChild>
@@ -928,8 +775,6 @@ export default function ReportsPage() {
           )}
         </CardContent>
       </Card>
-<<<<<<< HEAD
-
       {/* Shoe Service Statistics */}
       <Card className="opacity-0 animate-fade-in" style={{ animationDelay: "0.5s" }}>
         <CardHeader>
@@ -980,8 +825,6 @@ export default function ReportsPage() {
           )}
         </CardContent>
       </Card>
-=======
->>>>>>> ca752285cda78ccc8abe7be14e798ad6fed40741
     </div>
   );
 }
