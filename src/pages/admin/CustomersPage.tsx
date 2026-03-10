@@ -24,6 +24,7 @@ import { Search, Users } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+import { ResponsiveFilterLayout } from "@/components/ResponsiveFilterLayout";
 
 export default function CustomersPage() {
   const { customers, orders } = useAppStore();
@@ -117,40 +118,38 @@ export default function CustomersPage() {
         </Card>
       </div>
 
-      {/* Search & Rows Per Page */}
-      <Card>
-        <CardContent className="pt-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama atau nomor telepon..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <MonthYearFilter
-              selectedMonth={selectedMonth}
-              selectedYear={selectedYear}
-              onMonthChange={setSelectedMonth}
-              onYearChange={setSelectedYear}
-              availableYears={availableYears}
-            />
-            <Select value={String(rowsPerPage)} onValueChange={(v) => { setRowsPerPage(Number(v)); setCurrentPage(1); }}>
-              <SelectTrigger className="w-24">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Filters */}
+      <ResponsiveFilterLayout>
+        <div className="relative w-full md:w-[350px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Cari nama atau telepon..."
+            className="pl-9 h-10 text-sm rounded-[10px] w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <MonthYearFilter
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          onMonthChange={setSelectedMonth}
+          onYearChange={setSelectedYear}
+          availableYears={availableYears}
+        />
+
+        <Select value={String(rowsPerPage)} onValueChange={(v) => { setRowsPerPage(Number(v)); setCurrentPage(1); }}>
+          <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[80px] bg-background text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
+      </ResponsiveFilterLayout>
 
       {/* Table */}
       <Card>

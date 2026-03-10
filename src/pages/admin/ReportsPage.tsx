@@ -37,6 +37,7 @@ import jsPDF from "jspdf";
 import { useToast } from "@/hooks/use-toast";
 import { BranchFilter } from "@/components/BranchFilter";
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+import { ResponsiveFilterLayout } from "@/components/ResponsiveFilterLayout";
 import { cn } from "@/lib/utils";
 
 type FilterPeriod = "week" | "month" | "year" | "custom";
@@ -488,32 +489,37 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Laporan</h1>
-          <p className="text-muted-foreground">Analisis pendapatan dan performa</p>
+      <div className="flex flex-col gap-4 mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Laporan</h1>
+            <p className="text-muted-foreground">Analisis pendapatan dan performa</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Select onValueChange={(v) => v === "current" ? exportToExcel() : exportAllBranchesToExcel()}>
+              <SelectTrigger className="h-10 rounded-[10px] w-auto gap-2 bg-background text-sm">
+                <FileSpreadsheet className="w-4 h-4 text-success" />
+                <span>Ekspor Excel</span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="current">Data Saat Ini</SelectItem>
+                <SelectItem value="all">Per Cabang</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select onValueChange={(v) => v === "current" ? exportToPDF() : exportAllBranchesToPDF()}>
+              <SelectTrigger className="h-10 rounded-[10px] w-auto gap-2 bg-background text-sm">
+                <Download className="w-4 h-4 text-destructive" />
+                <span>Ekspor PDF</span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="current">Data Saat Ini</SelectItem>
+                <SelectItem value="all">Per Cabang</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Select onValueChange={(v) => v === "current" ? exportToExcel() : exportAllBranchesToExcel()}>
-            <SelectTrigger className="w-auto gap-2">
-              <FileSpreadsheet className="w-4 h-4" />
-              <span>Ekspor Excel</span>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="current">Data Saat Ini</SelectItem>
-              <SelectItem value="all">Per Cabang (Terpisah)</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select onValueChange={(v) => v === "current" ? exportToPDF() : exportAllBranchesToPDF()}>
-            <SelectTrigger className="w-auto gap-2">
-              <Download className="w-4 h-4" />
-              <span>Ekspor PDF</span>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="current">Data Saat Ini</SelectItem>
-              <SelectItem value="all">Per Cabang (Terpisah)</SelectItem>
-            </SelectContent>
-          </Select>
+        
+        <ResponsiveFilterLayout>
           <BranchFilter
             value={selectedBranch}
             onChange={setSelectedBranch}
@@ -526,11 +532,12 @@ export default function ReportsPage() {
             onYearChange={setSelectedYear}
             availableYears={availableYears}
           />
+
           {selectedMonth === null && selectedYear === null && (
             <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
-              <SelectTrigger className="w-40">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
+              <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[140px] bg-background text-sm">
+                <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />
+                <SelectValue placeholder="Periode" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="week">Minggu Ini</SelectItem>
@@ -548,7 +555,7 @@ export default function ReportsPage() {
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-[130px] justify-start text-left font-normal",
+                      "w-full md:w-[130px] h-10 rounded-[10px] justify-start text-left font-normal text-sm px-3",
                       !customStartDate && "text-muted-foreground"
                     )}
                   >
@@ -573,7 +580,7 @@ export default function ReportsPage() {
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-[130px] justify-start text-left font-normal",
+                      "w-full md:w-[130px] h-10 rounded-[10px] justify-start text-left font-normal text-sm px-3",
                       !customEndDate && "text-muted-foreground"
                     )}
                   >
@@ -594,7 +601,7 @@ export default function ReportsPage() {
               </Popover>
             </div>
           )}
-        </div>
+        </ResponsiveFilterLayout>
       </div>
 
       {/* Stats */}

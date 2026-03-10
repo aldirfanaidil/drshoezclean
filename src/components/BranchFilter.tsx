@@ -8,6 +8,8 @@ import {
 import { Building2 } from "lucide-react";
 import { Branch } from "@/lib/store";
 
+import { cn } from "@/lib/utils";
+
 interface BranchFilterProps {
   value: string;
   onChange: (value: string) => void;
@@ -15,12 +17,12 @@ interface BranchFilterProps {
   className?: string;
 }
 
-export function BranchFilter({ value, onChange, branches, className = "w-40" }: BranchFilterProps) {
+export function BranchFilter({ value, onChange, branches, className }: BranchFilterProps) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className={className}>
-        <Building2 className="w-4 h-4 mr-2" />
-        <SelectValue placeholder="Semua Cabang" />
+      <SelectTrigger className={cn("h-10 rounded-[10px] w-full bg-background md:w-[160px]", className)}>
+        <Building2 className="w-4 h-4 mr-2 text-muted-foreground" />
+        <SelectValue placeholder="Pilih Cabang" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="all">Semua Cabang</SelectItem>

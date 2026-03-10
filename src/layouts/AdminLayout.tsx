@@ -61,10 +61,10 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background w-full overflow-x-hidden">
       <AdminSidebar />
-      <main className="lg:ml-64 min-h-screen">
-        <div className="p-6 lg:p-8 pt-20 lg:pt-8">
+      <main className="lg:ml-64 min-h-screen max-w-full overflow-x-hidden">
+        <div className="p-6 lg:p-8 pt-20 lg:pt-8 w-full">
           <Outlet />
         </div>
       </main>

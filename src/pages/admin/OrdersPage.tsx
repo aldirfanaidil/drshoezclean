@@ -48,6 +48,7 @@ import {
 } from "lucide-react";
 import { BranchFilter } from "@/components/BranchFilter";
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+import { ResponsiveFilterLayout } from "@/components/ResponsiveFilterLayout";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import InvoicePreview from "@/components/InvoicePreview";
@@ -427,64 +428,65 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="pt-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama, telepon, atau invoice..."
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <BarcodeScanner
-              onScan={(result) => {
-                setSearchQuery(result);
-                toast({
-                  title: "Barcode Terdeteksi",
-                  description: `Mencari: ${result}`,
-                });
-              }}
-            />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="unpaid">Belum Bayar</SelectItem>
-                <SelectItem value="paid">Lunas</SelectItem>
-                <SelectItem value="cancelled">Dibatalkan</SelectItem>
-              </SelectContent>
-            </Select>
-            <BranchFilter
-              value={branchFilter}
-              onChange={setBranchFilter}
-              branches={branches}
-            />
-            <MonthYearFilter
-              selectedMonth={selectedMonth}
-              selectedYear={selectedYear}
-              onMonthChange={(m) => { setSelectedMonth(m); setCurrentPage(1); }}
-              onYearChange={(y) => { setSelectedYear(y); setCurrentPage(1); }}
-              availableYears={availableYears}
-            />
-            <Select value={String(rowsPerPage)} onValueChange={(v) => setRowsPerPage(Number(v))}>
-              <SelectTrigger className="w-24">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <ResponsiveFilterLayout>
+        <div className="relative w-full md:w-[350px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Cari nama, telp, atau invoice..."
+            className="pl-9 h-10 text-sm rounded-[10px] w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <BarcodeScanner
+          onScan={(result) => {
+            setSearchQuery(result);
+            toast({
+              title: "Barcode Terdeteksi",
+              description: `Mencari: ${result}`,
+            });
+          }}
+        />
+
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[150px] bg-background text-sm">
+            <SelectValue placeholder="Pilih Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Status</SelectItem>
+            <SelectItem value="unpaid">Belum Bayar</SelectItem>
+            <SelectItem value="paid">Lunas</SelectItem>
+            <SelectItem value="cancelled">Dibatalkan</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <BranchFilter
+          value={branchFilter}
+          onChange={setBranchFilter}
+          branches={branches}
+        />
+
+        <MonthYearFilter
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          onMonthChange={(m) => { setSelectedMonth(m); setCurrentPage(1); }}
+          onYearChange={(y) => { setSelectedYear(y); setCurrentPage(1); }}
+          availableYears={availableYears}
+        />
+
+        <Select value={String(rowsPerPage)} onValueChange={(v) => setRowsPerPage(Number(v))}>
+          <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[80px] bg-background text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
+      </ResponsiveFilterLayout>
 
       {/* Table */}
       <Card>

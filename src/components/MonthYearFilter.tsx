@@ -36,14 +36,13 @@ export function MonthYearFilter({
   const hasFilter = selectedMonth !== null || selectedYear !== null;
 
   return (
-    <div className="flex items-center gap-2">
-      <CalendarDays className="w-4 h-4 text-muted-foreground hidden sm:block" />
+    <>
       <Select
         value={selectedMonth !== null ? String(selectedMonth) : "all"}
         onValueChange={(v) => onMonthChange(v === "all" ? null : Number(v))}
       >
-        <SelectTrigger className="w-[130px]">
-          <SelectValue placeholder="Bulan" />
+        <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[140px] bg-background">
+          <SelectValue placeholder="Pilih Bulan" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Bulan</SelectItem>
@@ -59,8 +58,8 @@ export function MonthYearFilter({
         value={selectedYear !== null ? String(selectedYear) : "all"}
         onValueChange={(v) => onYearChange(v === "all" ? null : Number(v))}
       >
-        <SelectTrigger className="w-[100px]">
-          <SelectValue placeholder="Tahun" />
+        <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[120px] bg-background">
+          <SelectValue placeholder="Pilih Tahun" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Semua Tahun</SelectItem>
@@ -76,13 +75,13 @@ export function MonthYearFilter({
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="h-10 w-10 md:w-10 rounded-[10px] flex-shrink-0 text-muted-foreground hover:text-foreground"
           onClick={() => { onMonthChange(null); onYearChange(null); }}
-          title="Reset filter"
+          title="Reset filter bulan tahun"
         >
           <X className="w-4 h-4" />
         </Button>
       )}
-    </div>
+    </>
   );
 }

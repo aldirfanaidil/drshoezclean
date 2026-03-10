@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { BranchFilter } from "@/components/BranchFilter";
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+import { ResponsiveFilterLayout } from "@/components/ResponsiveFilterLayout";
 import {
   AreaChart,
   Area,
@@ -84,8 +85,8 @@ function KPICard({ title, value, icon: Icon, trend, onClick, colorClass = "text-
             </p>
           )}
         </div>
-        <div className={`p-3 rounded-xl bg-primary/10 ${colorClass}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`flex items-center justify-center w-10 h-10 rounded-[10px] bg-primary/10 ${colorClass}`}>
+          <Icon className="w-[18px] h-[18px]" />
         </div>
       </div>
     </Card>
@@ -345,7 +346,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 mb-2">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground flex items-center gap-2">
@@ -353,15 +354,8 @@ export default function DashboardPage() {
             Real-time • Terakhir update: {format(lastUpdate, "HH:mm:ss")}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
-          </Button>
+        
+        <ResponsiveFilterLayout onRefresh={handleRefresh}>
           <BranchFilter
             value={selectedBranch}
             onChange={setSelectedBranch}
@@ -376,9 +370,9 @@ export default function DashboardPage() {
           />
           {selectedMonth === null && selectedYear === null && (
             <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
-              <SelectTrigger className="w-40">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
+              <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[140px] bg-background text-sm">
+                <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />
+                <SelectValue placeholder="Periode" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="day">Hari Ini</SelectItem>
@@ -388,7 +382,7 @@ export default function DashboardPage() {
               </SelectContent>
             </Select>
           )}
-        </div>
+        </ResponsiveFilterLayout>
       </div>
 
       {/* KPI Cards */}

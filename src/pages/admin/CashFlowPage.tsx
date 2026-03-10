@@ -43,6 +43,7 @@ import {
 import { format, startOfWeek, startOfMonth, startOfYear, isAfter, parseISO } from "date-fns";
 import { id } from "date-fns/locale";
 import { MonthYearFilter } from "@/components/MonthYearFilter";
+import { ResponsiveFilterLayout } from "@/components/ResponsiveFilterLayout";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -167,12 +168,18 @@ export default function CashFlowPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Arus Kas</h1>
-          <p className="text-muted-foreground">Kelola pendapatan dan pengeluaran</p>
+      <div className="flex flex-col gap-4 mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Arus Kas</h1>
+            <p className="text-muted-foreground">Kelola pendapatan dan pengeluaran</p>
+          </div>
+          <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }} className="w-full sm:w-auto">
+            <Plus className="w-4 h-4 mr-2" /> Tambah Transaksi
+          </Button>
         </div>
-        <div className="flex flex-wrap gap-2">
+
+        <ResponsiveFilterLayout>
           <MonthYearFilter
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
@@ -182,9 +189,9 @@ export default function CashFlowPage() {
           />
           {selectedMonth === null && selectedYear === null && (
             <Select value={period} onValueChange={(v: FilterPeriod) => setPeriod(v)}>
-              <SelectTrigger className="w-40">
-                <Calendar className="w-4 h-4 mr-2" />
-                <SelectValue />
+              <SelectTrigger className="h-10 rounded-[10px] w-full md:w-[140px] bg-background text-sm">
+                <Calendar className="w-4 h-4 mr-2 text-muted-foreground" />
+                <SelectValue placeholder="Periode" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="day">Hari Ini</SelectItem>
@@ -194,10 +201,7 @@ export default function CashFlowPage() {
               </SelectContent>
             </Select>
           )}
-          <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
-            <Plus className="w-4 h-4 mr-2" /> Tambah Transaksi
-          </Button>
-        </div>
+        </ResponsiveFilterLayout>
       </div>
 
       {/* Stats */}
