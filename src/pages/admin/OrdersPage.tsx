@@ -656,7 +656,7 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
                         <div>
                           <p className="font-medium">Sepatu {index + 1}: {shoe.brand}</p>
                           <p className="text-sm text-muted-foreground">
-                            {SERVICES[shoe.service as keyof typeof SERVICES]?.name} - {shoe.serviceType}
+                            {SERVICES[shoe.service as keyof typeof SERVICES]?.name} - {SERVICES[shoe.service as keyof typeof SERVICES]?.types[shoe.serviceType as any]?.name || shoe.serviceType}
                           </p>
                         </div>
                         <p className="font-semibold">{formatCurrency(shoe.price)}</p>

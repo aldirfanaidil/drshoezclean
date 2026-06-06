@@ -54,6 +54,15 @@ export const SERVICES = {
       premium: { name: "Premium", price: 110000 },
     },
   },
+  REPAIR: {
+    name: "Repair",
+    duration: "3-7 hari",
+    types: {
+      lem: { name: "Lem", price: 0 },
+      jahit: { name: "Jahit", price: 0 },
+      ganti_sol: { name: "Ganti Sol", price: 0 },
+    },
+  },
 } as const;
 
 export const PAYMENT_STATUS = {

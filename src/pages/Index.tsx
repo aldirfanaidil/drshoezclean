@@ -41,9 +41,9 @@ export default function ClientFormPage() {
     setFormData({ ...formData, shoeCount: count, shoes: newShoes });
   };
 
-  const handleShoeChange = (index: number, field: keyof ShoeItem, value: string) => {
+  const handleShoeChange = (index: number, field: keyof ShoeItem, value: string | number) => {
     const newShoes = [...formData.shoes];
-    newShoes[index] = { ...newShoes[index], [field]: value };
+    newShoes[index] = { ...newShoes[index], [field]: value } as ShoeItem;
 
     if (field === "service" || field === "serviceType") {
       const service = newShoes[index].service;
@@ -169,12 +169,26 @@ export default function ClientFormPage() {
                         <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
                         <SelectContent>
                           {shoe.service && Object.entries(SERVICES[shoe.service as keyof typeof SERVICES].types).map(([key, t]) => (
-                            <SelectItem key={key} value={key}>{t.name} - {formatCurrency(t.price)}</SelectItem>
+                            <SelectItem key={key} value={key}>{t.name} {t.price > 0 ? `- ${formatCurrency(t.price)}` : ""}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
+                  {shoe.service === "REPAIR" && (
+                    <div className="space-y-2">
+                      <Label>Harga Manual</Label>
+                      <Input
+                        type="number"
+                        placeholder="Masukkan harga"
+                        value={shoe.price || ""}
+                        onChange={(e) => {
+                          const val = e.target.value === "" ? 0 : Number(e.target.value);
+                          handleShoeChange(index, "price", val);
+                        }}
+                      />
+                    </div>
+                  )}
                   {shoe.price > 0 && <p className="text-right font-semibold text-primary">{formatCurrency(shoe.price)}</p>}
                 </CardContent>
               </Card>

@@ -103,8 +103,9 @@ export default function OrderForm({
     }
 
     // Apply discount
-    if (field === "discountId") {
-      const discount = discounts.find((d) => d.id === value && d.isActive);
+    if (field === "discountId" || field === "price") {
+      const discountId = newShoes[index].discountId;
+      const discount = discounts.find((d) => d.id === discountId && d.isActive);
       if (discount) {
         if (discount.type === "percentage") {
           newShoes[index].discountAmount = (newShoes[index].price * discount.value) / 100;
@@ -294,12 +295,26 @@ export default function OrderForm({
                       <SelectItem value="none">Pilih tipe</SelectItem>
                       {shoe.service && Object.entries(SERVICES[shoe.service as keyof typeof SERVICES]?.types || {}).map(([key, type]) => (
                         <SelectItem key={key} value={key}>
-                          {type.name} - {formatCurrency(type.price)}
+                          {type.name} {type.price > 0 ? `- ${formatCurrency(type.price)}` : ""}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+                {shoe.service === "REPAIR" && (
+                  <div className="space-y-2">
+                    <Label>Harga Manual</Label>
+                    <Input
+                      type="number"
+                      placeholder="Masukkan harga"
+                      value={shoe.price || ""}
+                      onChange={(e) => {
+                        const val = e.target.value === "" ? 0 : Number(e.target.value);
+                        handleShoeChange(index, "price", val);
+                      }}
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label>Diskon</Label>
                   <Select

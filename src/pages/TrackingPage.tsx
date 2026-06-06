@@ -284,7 +284,7 @@ export default function TrackingPage() {
                     <div>
                       <p className="font-medium">{shoe.brand}</p>
                       <p className="text-xs text-muted-foreground">
-                        {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service} - {shoe.serviceType}
+                        {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service} - {SERVICES[shoe.service as keyof typeof SERVICES]?.types[shoe.serviceType as any]?.name || shoe.serviceType}
                       </p>
                       <Badge variant="outline" className="text-[10px] mt-1">
                         {getStatusInfo(shoe.processStatus || "received").label}
