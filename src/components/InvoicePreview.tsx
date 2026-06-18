@@ -190,8 +190,15 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
 
     let shoesText = "";
     order.shoes.forEach((shoe, index) => {
-      const serviceName = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
-      shoesText += `\n${index + 1}. ${shoe.brand}\n   ${serviceName} - ${formatCurrency(shoe.price)}`;
+      // Determine the specific service type name (e.g., ganti_sol, lem, jahit) if available
+      let typeLabel = "";
+      if (shoe.service && shoe.serviceType) {
+        const serviceObj = SERVICES[shoe.service as keyof typeof SERVICES];
+        typeLabel = serviceObj?.types?.[shoe.serviceType as keyof typeof serviceObj.types]?.name || shoe.serviceType;
+      } else if (shoe.service) {
+        typeLabel = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
+      }
+      shoesText += `\n${index + 1}. ${shoe.brand}\n   ${typeLabel} - ${formatCurrency(shoe.price)}`;
     });
 
     return `🧾 *INVOICE ${settings.name}*
@@ -573,7 +580,11 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
                   <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>{shoe.brand}</p>
                   <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>
                     <span className="text-muted-foreground">
-                      {SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service}
+                      {
+  shoe.service && shoe.serviceType
+    ? (SERVICES[shoe.service as keyof typeof SERVICES]?.types?.[shoe.serviceType as keyof typeof SERVICES[shoe.service as keyof typeof SERVICES].types]?.name || shoe.serviceType)
+    : (SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service)
+}
                     </span>
                     <span>{formatCurrency(shoe.price)}</span>
                   </div>
