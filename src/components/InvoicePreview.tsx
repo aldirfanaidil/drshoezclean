@@ -194,7 +194,8 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
       let typeLabel = "";
       if (shoe.service && shoe.serviceType) {
         const serviceObj = SERVICES[shoe.service as keyof typeof SERVICES] as any;
-        typeLabel = serviceObj?.types?.[shoe.serviceType as any]?.name || shoe.serviceType;
+        const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+        typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType;
       } else if (shoe.service) {
         typeLabel = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
       }
@@ -580,15 +581,15 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
                   <p className="font-medium" style={{ fontSize: paperSize === "58mm" ? "15px" : "16px" }}>{shoe.brand}</p>
                   <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>
                     <span className="text-muted-foreground">
-                      {
-  (() => {
-    if (shoe.service && shoe.serviceType) {
-      const srv = SERVICES[shoe.service as keyof typeof SERVICES] as any;
-      return srv?.types?.[shoe.serviceType as any]?.name || shoe.serviceType;
-    }
-    return SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
-  })()
-}
+                      {(() => {
+                        if (shoe.service && shoe.serviceType) {
+                           const serviceKey = (shoe.service ?? "").toUpperCase();
+                           const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+                           const srv = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+                           return srv?.types?.[typeKey as any]?.name || shoe.serviceType || srv?.name || shoe.service;
+                        }
+                        return SERVICES[(shoe.service ?? "").toUpperCase() as keyof typeof SERVICES]?.name || shoe.service;
+                      })()}
                     </span>
                     <span>{formatCurrency(shoe.price)}</span>
                   </div>
