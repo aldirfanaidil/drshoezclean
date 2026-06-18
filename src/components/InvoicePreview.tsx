@@ -193,8 +193,8 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
       // Determine the specific service type name (e.g., ganti_sol, lem, jahit) if available
       let typeLabel = "";
       if (shoe.service && shoe.serviceType) {
-        const serviceObj = SERVICES[shoe.service as keyof typeof SERVICES];
-        typeLabel = serviceObj?.types?.[shoe.serviceType as keyof typeof serviceObj.types]?.name || shoe.serviceType;
+        const serviceObj = SERVICES[shoe.service as keyof typeof SERVICES] as any;
+        typeLabel = serviceObj?.types?.[shoe.serviceType as any]?.name || shoe.serviceType;
       } else if (shoe.service) {
         typeLabel = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
       }
@@ -581,9 +581,13 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
                   <div className="flex justify-between" style={{ fontSize: paperSize === "58mm" ? "14px" : "15px" }}>
                     <span className="text-muted-foreground">
                       {
-  shoe.service && shoe.serviceType
-    ? (SERVICES[shoe.service as keyof typeof SERVICES]?.types?.[shoe.serviceType as keyof typeof SERVICES[shoe.service as keyof typeof SERVICES].types]?.name || shoe.serviceType)
-    : (SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service)
+  (() => {
+    if (shoe.service && shoe.serviceType) {
+      const srv = SERVICES[shoe.service as keyof typeof SERVICES] as any;
+      return srv?.types?.[shoe.serviceType as any]?.name || shoe.serviceType;
+    }
+    return SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
+  })()
 }
                     </span>
                     <span>{formatCurrency(shoe.price)}</span>
