@@ -138,7 +138,17 @@ export function ThermalPrintContent({ order }: { order: Order }) {
                                 {order.shoes.map((shoe, i) => (
                                     <div key={shoe.id} className="ml-2">
                                         <p><b>{i + 1}. {shoe.brand}</b></p>
-                                        <p className="ml-2">{SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service}</p>
+                                        <p className="ml-2">
+                                            {(() => {
+                                                const serviceKey = (shoe.service ?? "").toUpperCase();
+                                                const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+                                                const srv = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+                                                if (srv) {
+                                                    return `${srv.name} - ${srv.types?.[typeKey]?.name || shoe.serviceType || ""}`;
+                                                }
+                                                return `${shoe.service} - ${shoe.serviceType || ""}`;
+                                            })()}
+                                        </p>
                                         <p className="ml-2">{formatCurrency(shoe.price)}</p>
                                     </div>
                                 ))}

@@ -52,11 +52,23 @@ export default function BluetoothPrinterDialog({ order, trigger }: BluetoothPrin
       invoiceNumber: order.invoiceNumber,
       date: format(new Date(order.entryDate), "dd MMM yyyy HH:mm", { locale: id }),
       customerName: order.customerName,
-      items: order.shoes.map((shoe) => ({
-        name: shoe.brand,
-        service: SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service,
-        price: shoe.price,
-      })),
+      items: order.shoes.map((shoe) => {
+        let typeLabel = "";
+        if (shoe.service && shoe.serviceType) {
+          const serviceKey = (shoe.service ?? "").toUpperCase();
+          const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+          const serviceObj = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+          typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType || serviceObj?.name || shoe.service;
+        } else if (shoe.service) {
+          const serviceKey = (shoe.service ?? "").toUpperCase();
+          typeLabel = SERVICES[serviceKey as keyof typeof SERVICES]?.name || shoe.service;
+        }
+        return {
+          name: shoe.brand,
+          service: typeLabel,
+          price: shoe.price,
+        };
+      }),
       subtotal: order.subtotal,
       discount: order.discount,
       total: order.total,

@@ -193,11 +193,13 @@ export default function InvoicePreview({ order }: InvoicePreviewProps) {
       // Determine the specific service type name (e.g., ganti_sol, lem, jahit) if available
       let typeLabel = "";
       if (shoe.service && shoe.serviceType) {
-        const serviceObj = SERVICES[shoe.service as keyof typeof SERVICES] as any;
+        const serviceKey = (shoe.service ?? "").toUpperCase();
         const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
-        typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType;
+        const serviceObj = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+        typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType || serviceObj?.name || shoe.service;
       } else if (shoe.service) {
-        typeLabel = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
+        const serviceKey = (shoe.service ?? "").toUpperCase();
+        typeLabel = SERVICES[serviceKey as keyof typeof SERVICES]?.name || shoe.service;
       }
       shoesText += `\n${index + 1}. ${shoe.brand}\n   ${typeLabel} - ${formatCurrency(shoe.price)}`;
     });

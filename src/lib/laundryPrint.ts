@@ -160,14 +160,23 @@ export async function generateCustomerInvoiceWithEncoder(
     encoder.bold(true).line('Detail Item:').bold(false);
 
     order.shoes.forEach((shoe, index) => {
-        const serviceName = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
+        let typeLabel = "";
+        if (shoe.service && shoe.serviceType) {
+            const serviceKey = (shoe.service ?? "").toUpperCase();
+            const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+            const serviceObj = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+            typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType || serviceObj?.name || shoe.service;
+        } else if (shoe.service) {
+            const serviceKey = (shoe.service ?? "").toUpperCase();
+            typeLabel = SERVICES[serviceKey as keyof typeof SERVICES]?.name || shoe.service;
+        }
         const priceStr = formatRupiah(shoe.price);
 
         encoder
             .bold(true)
             .line((index + 1) + '. ' + shoe.brand)
             .bold(false)
-            .line('   ' + serviceName)
+            .line('   ' + typeLabel)
             .line(formatRow('', priceStr)); // Harga rata kanan dengan padding
     });
 

@@ -34,24 +34,17 @@ export const SERVICES = {
     name: "Unyellowing",
     duration: "4-6 hari",
     types: {
-      platinum: { name: "Platinum", price: 37000 },
       premium: { name: "Premium", price: 40000 },
-    },
-  },
-  RECOLOUR: {
-    name: "Recolour",
-    duration: "7-10 hari",
-    types: {
-      platinum: { name: "Platinum", price: 88000 },
-      premium: { name: "Premium", price: 115000 },
     },
   },
   REPAINT: {
     name: "Repaint",
     duration: "7-10 hari",
     types: {
-      platinum: { name: "Platinum", price: 86000 },
-      premium: { name: "Premium", price: 110000 },
+      checkboard: { name: "Checkboard", price: 130000 },
+      canvas_mesh: { name: "Canvas/Mesh", price: 120000 },
+      suede: { name: "Suede", price: 150000 },
+      mid_sole: { name: "Mid Sole", price: 100000 },
     },
   },
   REPAIR: {

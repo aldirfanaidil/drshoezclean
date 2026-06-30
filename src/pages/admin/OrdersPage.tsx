@@ -78,8 +78,17 @@ export default function OrdersPage() {
 
     let shoesText = "";
     order.shoes.forEach((shoe, index) => {
-      const serviceName = SERVICES[shoe.service as keyof typeof SERVICES]?.name || shoe.service;
-      shoesText += `\n${index + 1}. ${shoe.brand}\n   ${serviceName} - ${formatCurrency(shoe.price)}`;
+      let typeLabel = "";
+      if (shoe.service && shoe.serviceType) {
+        const serviceKey = (shoe.service ?? "").toUpperCase();
+        const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+        const serviceObj = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+        typeLabel = serviceObj?.types?.[typeKey as any]?.name || shoe.serviceType || serviceObj?.name || shoe.service;
+      } else if (shoe.service) {
+        const serviceKey = (shoe.service ?? "").toUpperCase();
+        typeLabel = SERVICES[serviceKey as keyof typeof SERVICES]?.name || shoe.service;
+      }
+      shoesText += `\n${index + 1}. ${shoe.brand}\n   ${typeLabel} - ${formatCurrency(shoe.price)}`;
     });
 
     return `🧾 *INVOICE ${settings.name}*
@@ -656,7 +665,15 @@ Terima kasih telah menggunakan jasa *${settings.name}*! 🙏
                         <div>
                           <p className="font-medium">Sepatu {index + 1}: {shoe.brand}</p>
                           <p className="text-sm text-muted-foreground">
-                            {SERVICES[shoe.service as keyof typeof SERVICES]?.name} - {SERVICES[shoe.service as keyof typeof SERVICES]?.types[shoe.serviceType as any]?.name || shoe.serviceType}
+                            {(() => {
+                              const serviceKey = (shoe.service ?? "").toUpperCase();
+                              const typeKey = (shoe.serviceType ?? "").replace(/\s+/g, "_").toLowerCase();
+                              const srv = SERVICES[serviceKey as keyof typeof SERVICES] as any;
+                              if (srv) {
+                                return `${srv.name} - ${srv.types?.[typeKey]?.name || shoe.serviceType || ""}`;
+                              }
+                              return `${shoe.service} - ${shoe.serviceType || ""}`;
+                            })()}
                           </p>
                         </div>
                         <p className="font-semibold">{formatCurrency(shoe.price)}</p>
